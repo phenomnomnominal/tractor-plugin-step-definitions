@@ -1,0 +1,80 @@
+// Utilities:
+import * as assert from 'assert';
+
+// Module:
+import { StepDefinitionsModule } from '../step-definitions.module';
+
+// Dependencies:
+import '../models/task';
+
+function TaskParserService (
+    TaskModel
+) {
+    return { parse };
+
+    function parse (step, ast) {
+        try {
+            parseNextTask(step, ast);
+
+            let parsers = [parseFirstTask, parseSubsequentTask];
+            let taskCallExpression = parseTaskCallExpression(ast, parsers);
+
+            try {
+                return parseTask(step, taskCallExpression);
+            } catch (e) { }
+
+            throw new Error();
+        } catch (e) {
+            console.warn('Invalid task:', ast);
+            return null;
+        }
+    }
+
+    function parseNextTask (step, ast) {
+        try {
+            assert(ast.callee.object.callee);
+            parse(step, ast.callee.object);
+        } catch (e) { }
+    }
+
+    function parseTaskCallExpression (ast, parsers) {
+        let taskCallExpression = null;
+        parsers.filter(parser => {
+            try {
+                taskCallExpression = parser(ast);
+            } catch (e) { }
+        });
+        if (!taskCallExpression) {
+            throw new Error();
+        }
+        return taskCallExpression;
+    }
+
+    function parseFirstTask (ast) {
+        assert(ast.callee.object.name && ast.callee.property.name);
+        return ast;
+    }
+
+    function parseSubsequentTask (ast) {
+        let [thenFunctionExpression] = ast.arguments;
+        let [taskReturnStatement] = thenFunctionExpression.body.body;
+        return taskReturnStatement.argument;
+    }
+
+    function parseTask (step, taskCallExpression) {
+        let task = new TaskModel(step);
+        task.pageObject = task.step.stepDefinition.pageObjectInstances.find(pageObjectInstance => {
+            return taskCallExpression.callee.object.name === pageObjectInstance.variableName;
+        });
+        task.action = task.pageObject.pageObject.actions.find(action => {
+            return taskCallExpression.callee.property.name === action.variableName;
+        });
+        taskCallExpression.arguments.forEach((argument, index) => {
+            task.arguments[index].value = argument.value;
+        });
+        task.step.tasks.push(task);
+        return true;
+    }
+};
+
+StepDefinitionsModule.service('taskParserService', TaskParserService);
