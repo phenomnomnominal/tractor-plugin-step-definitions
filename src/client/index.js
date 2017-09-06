@@ -25,7 +25,9 @@ tractor.config((
                 }
                 let pageObjectFileStructureService = $injector.get('pageObjectFileStructureService');
                 return pageObjectFileStructureService.getFileStructure()
-                .then(() => pageObjectFileStructureService.fileStructure.allFiles);
+                .then(() => pageObjectFileStructureService.fileStructure.allFiles.filter(file => {
+                    return file.extension === '.po.js';
+                }));
             },
             availableMockRequests ($injector) {
                 if (!$injector.has('mockRequestFileStructureService')) {
@@ -33,7 +35,9 @@ tractor.config((
                 }
                 let mockRequestFileStructureService = $injector.get('mockRequestFileStructureService');
                 return mockRequestFileStructureService.getFileStructure()
-                .then(() => mockRequestFileStructureService.fileStructure.allFiles);
+                .then(() => mockRequestFileStructureService.fileStructure.allFiles.filter(file => {
+                    return file.extension === '.mock.json';
+                }));
             },
             stepDefinition (
                 $stateParams,

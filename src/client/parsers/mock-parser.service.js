@@ -1,5 +1,5 @@
 // Utilities:
-import * as assert from 'assert';
+import assert from 'assert';
 
 // Module:
 import { StepDefinitionsModule } from '../step-definitions.module';

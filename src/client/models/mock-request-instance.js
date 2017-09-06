@@ -6,7 +6,8 @@ import { camel } from 'change-case';
 import { StepDefinitionsModule } from '../step-definitions.module';
 
 function createMockRequestInstanceModelConstructor (
-    astCreatorService
+    astCreatorService,
+    config
 ) {
     let MockRequestInstanceModel = function MockRequestInstanceModel (mockRequest, stepDefinition) {
         Object.defineProperties(this, {
@@ -59,8 +60,9 @@ function createMockRequestInstanceModelConstructor (
     }
 
     function getRelativePath () {
-        let relativePath = path.relative(path.dirname(this.stepDefinition.url), this.mockRequest.url);
-        return relativePath;
+        let mockRequestsPath = path.join(config.mockRequests.directory, this.mockRequest.url);
+        let stepDefinitionPath = path.join(config.stepDefinitions.directory, this.stepDefinition.url);
+        return path.relative(path.dirname(stepDefinitionPath), mockRequestsPath);
     }
 }
 

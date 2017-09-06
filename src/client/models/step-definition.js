@@ -18,6 +18,11 @@ function createStepDefinitionModelConstructor (
         this.mockRequestInstances = [];
 
         Object.defineProperties(this, {
+            parameters: {
+                get () {
+                    return options.parameters
+                }
+            },
             availablePageObjects: {
                 get () {
                     return options.availablePageObjects;
@@ -109,7 +114,7 @@ function createStepDefinitionModelConstructor (
             mockRequests,
             step: this.step.ast
         }), this.meta);
-    };
-};
+    }
+}
 
 StepDefinitionsModule.factory('StepDefinitionModel', createStepDefinitionModelConstructor);

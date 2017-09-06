@@ -16,11 +16,9 @@ function StepDefinitionsController (
     fileEditorControllerFactory,
     stepDefinitionFileStructureService,
     persistentStateService,
-    notifierService,
-    availablePageObjects,
-    availableMockRequests,
-    stepDefinition
+    notifierService
 ) {
+    let { availablePageObjects, availableMockRequests, stepDefinition } = $scope.$parent.$resolve;
     var controller = fileEditorControllerFactory(
         $scope,
         $window,
@@ -59,7 +57,7 @@ function StepDefinitionsController (
             get: function () {
                 return this.fileModel
                     && this.fileModel.mockRequestInstances
-                    && this.fileModel.mockRequestnstances.length > 0;
+                    && this.fileModel.mockRequestInstances.length > 0;
             }
         },
         showTasksSection: {

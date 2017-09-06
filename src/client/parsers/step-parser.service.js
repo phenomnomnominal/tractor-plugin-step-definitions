@@ -1,5 +1,5 @@
 // Utilities:
-import * as assert from 'assert';
+import assert from 'assert';
 
 // Module:
 import { StepDefinitionsModule } from '../step-definitions.module';
@@ -84,7 +84,6 @@ function StepParserService (
 
     function parseExpectation (step, statement) {
         let [firstArgument] = statement.expression.callee.object.callee.object.arguments;
-        let elements = firstArgument.elements;
         firstArgument.elements.forEach(element => {
             assert(!(element.name && element.name === 'tasks'));
             let expectation = expectationParserService.parse(step, element);

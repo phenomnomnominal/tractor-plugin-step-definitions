@@ -22,7 +22,7 @@ export default function init (config) {
 init['@Inject'] = ['config'];
 
 function createDir (dir) {
-    return fs.mkdirAsync(path.relative('.', dir))
+    return fs.mkdirAsync(dir)
     .catch(Promise.OperationalError, error => {
         if (error && error.cause && error.cause.code === DIRECTORY_ALREADY_EXISTS) {
             throw new TractorError(`"${dir}" directory already exists.`);

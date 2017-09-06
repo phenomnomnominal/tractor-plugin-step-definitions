@@ -1,5 +1,5 @@
 // Utilities:
-import * as assert from 'assert';
+import assert from 'assert';
 
 // Module:
 import { StepDefinitionsModule } from '../step-definitions.module';
@@ -8,17 +8,23 @@ import { StepDefinitionsModule } from '../step-definitions.module';
 import '../models/mock-request-meta';
 import '../models/page-object-meta';
 import '../models/step-definition';
+import '../models/step-definition-parameter';
 import './step-parser.service';
 
+// Constants:
+const PARAMETER_NAME_REGEX = /([a-zA-Z]*)="([^"]*)"/g;
+
 function StepDefinitionParserService (
-    PageObjectMetaModel,
     MockRequestMetaModel,
+    PageObjectMetaModel,
+    StepDefinitionParameterModel,
     StepDefinitionModel,
     stepParserService
 ) {
     return { parse };
 
     function parse (stepDefinitionFile, availablePageObjects, availableMockRequests) {
+        let parameters = getParameters(stepDefinitionFile);
         availablePageObjects = availablePageObjects.map(pageObject => new PageObjectMetaModel(pageObject));
         availableMockRequests = availableMockRequests.map(mockRequest => new MockRequestMetaModel(mockRequest));
         try {
@@ -26,7 +32,7 @@ function StepDefinitionParserService (
             let [firstComment] = ast.comments;
             let meta = JSON.parse(firstComment.value);
 
-            let stepDefinition = new StepDefinitionModel({ availablePageObjects, availableMockRequests, url });
+            let stepDefinition = new StepDefinitionModel({ parameters, availablePageObjects, availableMockRequests, url });
             stepDefinition.name = meta.name;
 
             let [module] = ast.body;
@@ -39,6 +45,11 @@ function StepDefinitionParserService (
             console.warn('Invalid step definition:', stepDefinitionFile.ast);
             return null;
         }
+    }
+
+    function getParameters (stepDefinitionFile) {
+        let parameters = stepDefinitionFile.meta.name.match(PARAMETER_NAME_REGEX) || [];
+        return parameters.map(parameter => new StepDefinitionParameterModel(parameter));
     }
 
     function tryParse (stepDefinition, statements, meta, parsers) {
@@ -78,6 +89,6 @@ function StepDefinitionParserService (
         stepDefinition.step = step;
         return true;
     }
-};
+}
 
 StepDefinitionsModule.service('stepDefinitionParserService', StepDefinitionParserService);

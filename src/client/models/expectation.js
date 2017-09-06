@@ -86,11 +86,7 @@ function createExpectationModelConstructor (
     }
 
     function parseArguments () {
-        return this.action.parameters.map(parameter => {
-            return new ArgumentModel(null, {
-                name: parameter.name
-            });
-        });
+        return this.action.parameters.map(parameter => new ArgumentModel(this.step.stepDefinition, { name: parameter.name }));
     }
 }
 

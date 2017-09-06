@@ -81,7 +81,10 @@ function createStepModelConstructor (
         let mocks = this.mocks.map(mock => mock.ast);
         let tasks = this.tasks.map(task => task.ast);
 
-        let template = 'this.<%= type %>(<%= regex %>, function (done) { ';
+        let parameters = this.stepDefinition.parameters.map(parameter => parameter.ast);
+        parameters.push(ast.identifier('done'));
+
+        let template = 'this.<%= type %>(<%= regex %>, function (%= parameters %) { ';
         if (mocks.length) {
             template += 'Promise.all([%= mocks %]).spread(function () { done(); }).catch(done.fail);';
         } else if (tasks.length) {
@@ -99,6 +102,7 @@ function createStepModelConstructor (
         template += '});';
 
         return ast.template(template, {
+            parameters,
             type: ast.identifier(this.type),
             regex: ast.literal(this.regex),
             mocks,

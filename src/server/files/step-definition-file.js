@@ -4,31 +4,31 @@ const PENDING_QUERY = 'CallExpression[callee.name="callback"] .arguments[value]'
 const REQUIRE_QUERY = 'CallExpression[callee.name="require"] Literal';
 
 // Utilities:
+import Promise from 'bluebird';
 import path from 'path';
 
 // Dependencies:
 import esquery from 'esquery';
 import { JavaScriptFile } from 'tractor-file-javascript';
+import { StepDefinitionFileRefactorer } from './step-definition-file-refactorer';
 
 export class StepDefinitionFile extends JavaScriptFile {
     move (update, options) {
-        let referencePaths = Object.keys(this.fileStructure.references)
-        .filter(reference => this.fileStructure.references[reference].includes(this.path));
+        let references = this.fileStructure.references.getReferencesFrom(this.path);
+        this.fileStructure.references.clearReferences(this.path);
 
         // Hack to fix coverage bug: https://github.com/gotwarlost/istanbul/issues/690
         /* istanbul ignore next */
         let move = super.move(update, options);
 
         return move.then(newFile => {
-            referencePaths.forEach(referencePath => {
-                newFile.transformRequirePaths({
+            return Promise.map(references, reference => {
+                return newFile.refactor('referencePathChange', {
                     oldFromPath: this.path,
                     newFromPath: newFile.path,
-                    toPath: referencePath
+                    toPath: reference.path
                 });
             });
-
-            return newFile.save(newFile.ast);
         });
     }
 
@@ -42,6 +42,18 @@ export class StepDefinitionFile extends JavaScriptFile {
         .then(() => this.content);
     }
 
+    refactor (type, data) {
+        // Hack to fix coverage bug: https://github.com/gotwarlost/istanbul/issues/690
+        /* istanbul ignore next */
+        let refactor = super.refactor(type, data);
+
+        return refactor.then(() => {
+            let change = StepDefinitionFileRefactorer[type];
+            return change ? change(this, data) : Promise.resolve();
+        })
+        .then(() => this.save(this.ast));
+    }
+
     save (data) {
         // Hack to fix coverage bug: https://github.com/gotwarlost/istanbul/issues/690
         /* istanbul ignore next */
@@ -50,22 +62,6 @@ export class StepDefinitionFile extends JavaScriptFile {
         return save.then(() => getFileReferences.call(this))
         .then(() => checkIfPending.call(this))
         .then(() => this.content);
-    }
-
-    transformRequirePaths (options) {
-        let { oldFromPath, newFromPath } = options;
-        if (!(oldFromPath && newFromPath)) {
-            oldFromPath = newFromPath = options.fromPath;
-        }
-
-        let { oldToPath, newToPath } = options;
-        if (!(oldToPath && newToPath)) {
-            oldToPath = newToPath = options.toPath;
-        }
-
-        let oldRequirePath = getRelativeRequirePath(path.dirname(oldFromPath), oldToPath);
-        let newRequirePath = getRelativeRequirePath(path.dirname(newFromPath), newToPath);
-        updatePaths.call(this, oldRequirePath, newRequirePath);
     }
 }
 
@@ -83,33 +79,14 @@ function checkIfPending () {
 }
 
 function getFileReferences () {
-    let { references } = this.fileStructure;
-
-    Object.keys(references).forEach(filePath => {
-        let referencePaths = references[filePath];
-        if (referencePaths.includes(this.path)) {
-            referencePaths.splice(referencePaths.indexOf(this.path), 1);
-        }
-    });
+    this.fileStructure.references.clearReferences(this.path);
 
     esquery(this.ast, REQUIRE_QUERY).forEach(requirePath => {
         let directoryPath = path.dirname(this.path);
         let referencePath = path.resolve(directoryPath, requirePath.value);
-        references[referencePath] = references[referencePath] || [];
-        references[referencePath].push(this.path);
-    });
-}
-
-function getRelativeRequirePath (from, to) {
-    let relativePath = path.relative(from, to).replace(/\\/g, '/');
-    return /^\./.test(relativePath) ? relativePath : `./${relativePath}`;
-}
-
-function updatePaths (oldRequirePath, newRequirePath) {
-    let query = `CallExpression[callee.name="require"] Literal[value="${oldRequirePath}"]`;
-
-    esquery(this.ast, query).forEach(requirePathLiteral => {
-        requirePathLiteral.value = newRequirePath;
-        requirePathLiteral.raw = `'${newRequirePath}'`;
+        let reference = this.fileStructure.references.getReference(referencePath);
+        if (reference) {
+            this.fileStructure.references.addReference(reference, this);
+        }
     });
 }

@@ -1,341 +1,356 @@
 <style
     ng-bind-html="$ctrl.style">
 </style>
-<tractor-file-tree
-    extension="{{ $ctrl.extension }}"
-    file-structure="$ctrl.fileStructure"
-    type="{{ $ctrl.type }}"
-    create="$ctrl.createDirectory"
-    delete="$ctrl.delete"
-    move="$ctrl.move">
-</tractor-file-tree>
-<tractor-panel-handle
-    panel-name="step-definition-file-tree">
-</tractor-panel-handle>
-<form
-    class="file"
-    name="$ctrl.fileEditor"
-    novalidate
-    ng-submit="$ctrl.showErrors() && $ctrl.saveFile()">
-    <section
-        ng-if="$ctrl.fileModel"
-        class="file-options">
-        <h1
-            class="file-options__name">{{ ng-if="$ctrl.fileModel".fileModel.name }}
-        </h1>
-        <div
-            class="file-options__file-actions">
-            <tractor-confirm-dialog
-                trigger="ng-if="$ctrl.fileModel".confirmOverWrite">
-                <p>This will overwrite "{{ ng-if="$ctrl.fileModel".fileModel.name }}". Continue?</p>
-            </tractor-confirm-dialog>
-            <tractor-submit
-                class="file-options__save-file"
-                action="Save step definition file">
-            </tractor-submit>
-        </div>
-    </section>
-
-    <section
-        ng-if="$ctrl.fileModel"
-        class="file-editor">
+<div>
+    <tractor-file-tree
+        extension="{{ $ctrl.extension }}"
+        file-structure="$ctrl.fileStructure"
+        type="{{ $ctrl.type }}"
+        create="$ctrl.createDirectory"
+        delete="$ctrl.delete"
+        move="$ctrl.move">
+    </tractor-file-tree>
+    <tractor-panel-handle
+        panel-name="step-definition-file-tree">
+    </tractor-panel-handle>
+    <form
+        class="file"
+        name="$ctrl.fileEditor"
+        novalidate
+        ng-submit="$ctrl.showErrors() && $ctrl.saveFile()">
         <section
-            ng-if="$ctrl.showTasksSection"
-            class="file-editor__container">
-            <h2>Tasks:</h2>
-
-            <ol
-                ng-if="$ctrl.fileModel.step.tasks.length"
-                ng-model="$ctrl.fileModel.step.tasks"
-                as-sortable
-                is-disabled="$ctrl.fileModel.step.tasks.length < 2">
-                <li
-                    ng-repeat="task in $ctrl.fileModel.step.tasks"
-                    class="file-editor__list-item"
-                    as-sortable-item>
-                    <a
-                        class="file-editor__list-item-reference"
-                        title="{{ task.pageObject.name }}"
-                        ng-href="{{ $ctrl.getLink('tractor.page-objects', task.pageObject) }}">
-                    </a>
-                    <tractor-action
-                        model="$ctrl.fileModel.step"
-                        action="Remove task"
-                        argument="task"
-                        icon="remove">
-                    </tractor-action>
-                    <div
-                        ng-if="$ctrl.fileModel.step.tasks.length > 1"
-                        class="file-editor__list-item-sort-handle"
-                        as-sortable-item-handle
-                        title="Drag to sort">
-                    </div>
-
-                    <tractor-select
-                        label="Page Object"
-                        model="task"
-                        options="$ctrl.fileModel.pageObjectInstances"
-                        as="name">
-                    </tractor-select>
-                    <tractor-select
-                        label="Action"
-                        model="task"
-                        options="task.pageObject.pageObject.actions"
-                        as="name">
-                    </tractor-select>
-                    <div ng-repeat="argument in task.arguments">
-                        <tractor-literal-input
-                            form="file-editor"
-                            name="argument.name"
-                            model="argument"
-                            required>
-                        </tractor-literal-input>
-                    </div>
-                </li>
-            </ol>
-
-            <tractor-action
-                model="$ctrl.fileModel.step"
-                action="Add task">
-            </tractor-action>
+            ng-if="$ctrl.fileModel"
+            class="file-options">
+            <h1
+                class="file-options__name">{{ $ctrl.fileModel.name }}</h1>
+            </h1>
+            <div
+                class="file-options__file-actions">
+                <tractor-confirm-dialog
+                    trigger="$ctrl.confirmOverWrite">
+                    <p>This will overwrite "{{ $ctrl.fileModel.name }}". Continue?</p>
+                </tractor-confirm-dialog>
+                <tractor-submit
+                    class="file-options__save-file"
+                    action="Save step definition file">
+                </tractor-submit>
+            </div>
         </section>
 
         <section
-            ng-if="$ctrl.showExpectationsSection"
-            class="file-editor__container">
-            <h2>Expectations:</h2>
+            ng-if="$ctrl.fileModel"
+            class="file-editor">
+            <section
+                ng-if="$ctrl.fileModel.parameters.length > 0"
+                class="file-editor__container">
+                <h2>Parameters:</h2>
 
-            <ul>
-                <li
-                    class="file-editor__list-item"
-                    ng-repeat="expectation in $ctrl.fileModel.step.expectations">
-                    <a
-                        class="file-editor__list-item-reference"
-                        title="{{ expectation.pageObject.name }}"
-                        ng-href="{{ $ctrl.getLink('tractor.page-objects', expectation.pageObject) }}">
-                    </a>
-                    <tractor-action
-                        model="$ctrl.fileModel.step"
-                        action="Remove expectation"
-                        argument="expectation"
-                        icon="remove">
-                    </tractor-action>
+                <ol
+                    ng-repeat="parameter in $ctrl.fileModel.parameters">
+                    <li>
+                        {{ parameter.variableName }}
+                    </li>
+                </ol>
+            </section>
 
-                    <tractor-select
-                        label="Page Object"
-                        model="expectation"
-                        options="$ctrl.fileModel.pageObjectInstances"
-                        as="name">
-                    </tractor-select>
-                    <tractor-select
-                        label="Action"
-                        model="expectation"
-                        options="expectation.pageObject.pageObject.actions"
-                        as="name">
-                    </tractor-select>
-                    <tractor-select
-                        label="condition"
-                        model="expectation"
-                        options="expectation.conditions">
-                    </tractor-select>
-                    <div ng-repeat="argument in expectation.arguments">
-                        <tractor-literal-input
-                            form="file-editor"
-                            name="argument.name"
-                            model="argument"
-                            type="argument.type">
-                        </tractor-literal-input>
-                    </div>
-                    <tractor-literal-input
-                        form="file-editor"
-                        name="'Expected result'"
-                        model="expectation"
-                        required="true">
-                    </tractor-literal-input>
-                </li>
-            </ul>
+            <section
+                ng-if="$ctrl.showTasksSection"
+                class="file-editor__container">
+                <h2>Tasks:</h2>
 
-            <tractor-action
-                model="$ctrl.fileModel.step"
-                action="Add expectation">
-            </tractor-action>
-        </section>
-
-        <section ng-if="$ctrl.canAddPageObjects">
-            <section class="file-editor__container"
-                ng-if="$ctrl.hasPageObjects">
-                <h2>Active page objects:</h2>
-                <ul
-                    class="file-editor__list-item">
-                    <li ng-repeat="pageObject in $ctrl.fileModel.pageObjectInstances | orderBy: 'name'">
+                <ol
+                    ng-if="$ctrl.fileModel.step.tasks.length"
+                    ng-model="$ctrl.fileModel.step.tasks"
+                    as-sortable
+                    is-disabled="$ctrl.fileModel.step.tasks.length < 2">
+                    <li
+                        ng-repeat="task in $ctrl.fileModel.step.tasks"
+                        class="file-editor__list-item"
+                        as-sortable-item>
+                        <a
+                            class="file-editor__list-item-reference"
+                            title="{{ task.pageObject.name }}"
+                            ng-href="{{ $ctrl.getLink('tractor.page-objects', task.pageObject) }}">
+                        </a>
                         <tractor-action
-                            model="$ctrl.fileModel"
-                            action="Remove page object"
-                            argument="pageObject"
+                            model="$ctrl.fileModel.step"
+                            action="Remove task"
+                            argument="task"
                             icon="remove">
                         </tractor-action>
-                        <a
-                            title="{{ pageObject.name }}"
-                            ng-href="{{ $ctrl.getLink('tractor.page-objects', pageObject.pageObject) }}">
-                            {{ pageObject.name }}
-                        </a>
-                    </li>
-                </ul>
-            </section>
+                        <div
+                            ng-if="$ctrl.fileModel.step.tasks.length > 1"
+                            class="file-editor__list-item-sort-handle"
+                            as-sortable-item-handle
+                            title="Drag to sort">
+                        </div>
 
-            <section class="file-editor__container">
-                <h2>Available page objects:</h2>
-                <ul>
-                    <li ng-repeat="pageObject in $ctrl.fileModel.availablePageObjectss | orderBy: 'name'"
-                        ng-if="$ctrl.fileModel.pageObjects.indexOf(pageObject) === -1">
-                        <tractor-action
-                            model="$ctrl.fileModel"
-                            action="Add page object"
-                            argument="pageObject.name">
-                        </tractor-action>
-                        <a
-                            title="{{ pageObject.name }}"
-                            ng-href="{{ $ctrl.getLink('tractor.page-objects', pageObject) }}">
-                            {{ pageObject.name }}
-                        </a>
-                    </li>
-                </ul>
-            </section>
-        </section>
-
-        <section class="file-editor__container" ng-if="$ctrl.showMockRequestsSection">
-            <h2>Mock Requests:</h2>
-
-            <ul>
-                <li
-                    class="file-editor__list-item"
-                    ng-repeat="mock in $ctrl.fileModel.step.mocks">
-                    <a
-                        class="file-editor__list-item-reference"
-                        title="{{ mock.data.name }}"
-                        ng-href="{{ $ctrl.getLink('tractor.mock-data', mock.data) }}">
-                    </a>
-                    <tractor-action
-                        model="$ctrl.fileModel.step"
-                        action="Remove mock"
-                        argument="mock"
-                        icon="remove">
-                    </tractor-action>
-
-                    <section>
-                        <tractor-text-input
-                            form="file-editor"
-                            label="URL"
-                            model="mock"
-                            example="http://example.com"
-                            required>
-                        </tractor-text-input>
                         <tractor-select
-                            label="Action"
-                            model="mock">
-                        </tractor-select>
-
-                        <tractor-checkbox
-                            label="Pass through"
-                            model="mock">
-                        </tractor-checkbox>
-                    </section>
-                    <section
-                        ng-if="!mock.passThrough && $ctrl.hasMockRequests">
-                        <tractor-select
-                            label="Data"
-                            model="mock"
-                            options="$ctrl.fileModel.mockRequestInstances"
+                            label="Page Object"
+                            model="task"
+                            options="$ctrl.fileModel.pageObjectInstances"
                             as="name">
                         </tractor-select>
-                        <tractor-text-input
-                            form="file-editor"
-                            label="Status"
-                            model="mock"
-                            example="200">
-                        </tractor-text-input>
-                    </section>
+                        <tractor-select
+                            label="Action"
+                            model="task"
+                            options="task.pageObject.pageObject.actions"
+                            as="name">
+                        </tractor-select>
+                        <div ng-repeat="argument in task.arguments">
+                            <tractor-literal-input
+                                form="file-editor"
+                                name="argument.name"
+                                model="argument"
+                                required>
+                            </tractor-literal-input>
+                        </div>
+                    </li>
+                </ol>
 
-                    <section class="file-editor__container">
-                        <h2>Headers:</h2>
-                        <ul>
-                            <li ng-repeat="header in mock.headers">
-                                <tractor-action
-                                    model="mock"
-                                    action="Remove header"
-                                    argument="header"
-                                    icon="remove">
-                                </tractor-action>
-                                <tractor-text-input
-                                    form="file-editor"
-                                    label="key"
-                                    model="header"
-                                    example="content-type"
-                                    required>
-                                </tractor-text-input>
-                                <tractor-text-input
-                                    form="file-editor"
-                                    label="value"
-                                    model="header"
-                                    example="application/json"
-                                    required>
-                                </tractor-text-input>
-                            </li>
-                        </ul>
+                <tractor-action
+                    model="$ctrl.fileModel.step"
+                    action="Add task">
+                </tractor-action>
+            </section>
+
+            <section
+                ng-if="$ctrl.showExpectationsSection"
+                class="file-editor__container">
+                <h2>Expectations:</h2>
+
+                <ul>
+                    <li
+                        class="file-editor__list-item"
+                        ng-repeat="expectation in $ctrl.fileModel.step.expectations">
+                        <a
+                            class="file-editor__list-item-reference"
+                            title="{{ expectation.pageObject.name }}"
+                            ng-href="{{ $ctrl.getLink('tractor.page-objects', expectation.pageObject) }}">
+                        </a>
                         <tractor-action
-                            model="mock"
-                            action="Add header">
-                        </tractor-action>
-                    </section>
-                </li>
-            </ul>
-
-            <tractor-action
-                model="$ctrl.fileModel.step"
-                action="Add mock">
-            </tractor-action>
-        </section>
-
-        <section ng-if="$ctrl.canAddMockRequests">
-            <section class="file-editor__container"
-                ng-if="$ctrl.hasMockRequests">
-                <h2>Active mock requests:</h2>
-                <ul
-                    class="file-editor__list-item">
-                    <li ng-repeat="mockRequest in $ctrl.fileModel.mockRequestInstances | orderBy: 'name'">
-                        <tractor-action
-                            model="$ctrl.fileModel"
-                            action="Remove mock"
-                            argument="mockRequest"
+                            model="$ctrl.fileModel.step"
+                            action="Remove expectation"
+                            argument="expectation"
                             icon="remove">
                         </tractor-action>
-                        <a
-                            title="{{ mockRequest.name }}"
-                            ng-href="{{ $ctrl.getLink('tractor.mock-requests', mockRequest.mockRequest) }}">
-                            {{ mockRequest.name }}
-                        </a>
+
+                        <tractor-select
+                            label="Page Object"
+                            model="expectation"
+                            options="$ctrl.fileModel.pageObjectInstances"
+                            as="name">
+                        </tractor-select>
+                        <tractor-select
+                            label="Action"
+                            model="expectation"
+                            options="expectation.pageObject.pageObject.actions"
+                            as="name">
+                        </tractor-select>
+                        <tractor-select
+                            label="condition"
+                            model="expectation"
+                            options="expectation.conditions">
+                        </tractor-select>
+                        <div ng-repeat="argument in expectation.arguments">
+                            <tractor-literal-input
+                                form="file-editor"
+                                name="argument.name"
+                                model="argument"
+                                type="argument.type">
+                            </tractor-literal-input>
+                        </div>
+                        <tractor-literal-input
+                            form="file-editor"
+                            name="'Expected result'"
+                            model="expectation"
+                            required="true">
+                        </tractor-literal-input>
                     </li>
                 </ul>
+
+                <tractor-action
+                    model="$ctrl.fileModel.step"
+                    action="Add expectation">
+                </tractor-action>
             </section>
 
-            <section class="file-editor__container">
-                <h2>Available mock requests:</h2>
+            <section ng-if="$ctrl.canAddPageObjects">
+                <section class="file-editor__container"
+                    ng-if="$ctrl.hasPageObjects">
+                    <h2>Active page objects:</h2>
+                    <ul
+                        class="file-editor__list-item">
+                        <li ng-repeat="pageObject in $ctrl.fileModel.pageObjectInstances | orderBy: 'name'">
+                            <tractor-action
+                                model="$ctrl.fileModel"
+                                action="Remove page object"
+                                argument="pageObject"
+                                icon="remove">
+                            </tractor-action>
+                            <a
+                                title="{{ pageObject.name }}"
+                                ng-href="{{ $ctrl.getLink('tractor.page-objects', pageObject.pageObject) }}">
+                                {{ pageObject.name }}
+                            </a>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="file-editor__container">
+                    <h2>Available page objects:</h2>
+                    <ul>
+                        <li ng-repeat="pageObject in $ctrl.fileModel.availablePageObjects | orderBy: 'name'"
+                            ng-if="$ctrl.fileModel.pageObjects.indexOf(pageObject) === -1">
+                            <tractor-action
+                                model="$ctrl.fileModel"
+                                action="Add page object"
+                                argument="pageObject.name">
+                            </tractor-action>
+                            <a
+                                title="{{ pageObject.name }}"
+                                ng-href="{{ $ctrl.getLink('tractor.page-objects', pageObject) }}">
+                                {{ pageObject.name }}
+                            </a>
+                        </li>
+                    </ul>
+                </section>
+            </section>
+
+            <section class="file-editor__container" ng-if="$ctrl.showMockRequestsSection">
+                <h2>Mock Requests:</h2>
+
                 <ul>
-                    <li ng-repeat="mockRequest in $ctrl.fileModel.availableMockRequests | orderBy: 'name'"
-                        ng-if="$ctrl.fileModel.mockRequests.indexOf(mockRequest) === -1">
-                        <tractor-action
-                            model="$ctrl.fileModel"
-                            action="Add mock"
-                            argument="mockRequest.name">
-                        </tractor-action>
+                    <li
+                        class="file-editor__list-item"
+                        ng-repeat="mock in $ctrl.fileModel.step.mocks">
                         <a
-                            title="{{ mockRequest.name }}"
-                            ng-href="{{ $ctrl.getLink('tractor.mock-data', mockRequest) }}">
-                            {{ mockRequest.name }}
+                            class="file-editor__list-item-reference"
+                            title="{{ mock.data.name }}"
+                            ng-href="{{ $ctrl.getLink('tractor.mock-data', mock.data) }}">
                         </a>
+                        <tractor-action
+                            model="$ctrl.fileModel.step"
+                            action="Remove mock"
+                            argument="mock"
+                            icon="remove">
+                        </tractor-action>
+
+                        <section>
+                            <tractor-text-input
+                                form="file-editor"
+                                label="URL"
+                                model="mock"
+                                example="http://example.com"
+                                required>
+                            </tractor-text-input>
+                            <tractor-select
+                                label="Action"
+                                model="mock">
+                            </tractor-select>
+
+                            <tractor-checkbox
+                                label="Pass through"
+                                model="mock">
+                            </tractor-checkbox>
+                        </section>
+                        <section
+                            ng-if="!mock.passThrough && $ctrl.hasMockRequests">
+                            <tractor-select
+                                label="Data"
+                                model="mock"
+                                options="$ctrl.fileModel.mockRequestInstances"
+                                as="name">
+                            </tractor-select>
+                            <tractor-text-input
+                                form="file-editor"
+                                label="Status"
+                                model="mock"
+                                example="200">
+                            </tractor-text-input>
+                        </section>
+
+                        <section class="file-editor__container">
+                            <h2>Headers:</h2>
+                            <ul>
+                                <li ng-repeat="header in mock.headers">
+                                    <tractor-action
+                                        model="mock"
+                                        action="Remove header"
+                                        argument="header"
+                                        icon="remove">
+                                    </tractor-action>
+                                    <tractor-text-input
+                                        form="file-editor"
+                                        label="key"
+                                        model="header"
+                                        example="content-type"
+                                        required>
+                                    </tractor-text-input>
+                                    <tractor-text-input
+                                        form="file-editor"
+                                        label="value"
+                                        model="header"
+                                        example="application/json"
+                                        required>
+                                    </tractor-text-input>
+                                </li>
+                            </ul>
+                            <tractor-action
+                                model="mock"
+                                action="Add header">
+                            </tractor-action>
+                        </section>
                     </li>
                 </ul>
+
+                <tractor-action
+                    model="$ctrl.fileModel.step"
+                    action="Add mock">
+                </tractor-action>
+            </section>
+
+            <section ng-if="$ctrl.canAddMockRequests">
+                <section class="file-editor__container"
+                    ng-if="$ctrl.hasMockRequests">
+                    <h2>Active mock requests:</h2>
+                    <ul
+                        class="file-editor__list-item">
+                        <li ng-repeat="mockRequest in $ctrl.fileModel.mockRequestInstances | orderBy: 'name'">
+                            <tractor-action
+                                model="$ctrl.fileModel"
+                                action="Remove mock"
+                                argument="mockRequest"
+                                icon="remove">
+                            </tractor-action>
+                            <a
+                                title="{{ mockRequest.name }}"
+                                ng-href="{{ $ctrl.getLink('tractor.mock-requests', mockRequest.mockRequest) }}">
+                                {{ mockRequest.name }}
+                            </a>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="file-editor__container">
+                    <h2>Available mock requests:</h2>
+                    <ul>
+                        <li ng-repeat="mockRequest in $ctrl.fileModel.availableMockRequests | orderBy: 'name'"
+                            ng-if="$ctrl.fileModel.mockRequests.indexOf(mockRequest) === -1">
+                            <tractor-action
+                                model="$ctrl.fileModel"
+                                action="Add mock"
+                                argument="mockRequest.name">
+                            </tractor-action>
+                            <a
+                                title="{{ mockRequest.name }}"
+                                ng-href="{{ $ctrl.getLink('tractor.mock-data', mockRequest) }}">
+                                {{ mockRequest.name }}
+                            </a>
+                        </li>
+                    </ul>
+                </section>
             </section>
         </section>
-    </section>
-</form>
+    </form>
+</div>

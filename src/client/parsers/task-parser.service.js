@@ -1,5 +1,5 @@
 // Utilities:
-import * as assert from 'assert';
+import assert from 'assert';
 
 // Module:
 import { StepDefinitionsModule } from '../step-definitions.module';
@@ -70,11 +70,18 @@ function TaskParserService (
             return taskCallExpression.callee.property.name === action.variableName;
         });
         taskCallExpression.arguments.forEach((argument, index) => {
-            task.arguments[index].value = argument.value;
+            let value;
+            if (argument.type === 'Identifier') {
+                value = argument.name;
+            }
+            if (argument.type === 'Literal') {
+                value = argument.value;
+            }
+            task.arguments[index].value = value;
         });
         task.step.tasks.push(task);
         return true;
     }
-};
+}
 
 StepDefinitionsModule.service('taskParserService', TaskParserService);

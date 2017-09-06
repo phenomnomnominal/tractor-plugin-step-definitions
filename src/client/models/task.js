@@ -70,12 +70,7 @@ function createTaskModelConstructor (
     }
 
     function parseArguments () {
-        return this.action.parameters.map(parameter => {
-            let name = parameter.name;
-            name = name.replace(/([A-Z])/g, ' $1');
-            name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-            return new ArgumentModel(null, { name: name });
-        });
+        return this.action.parameters.map(parameter => new ArgumentModel(this.step.stepDefinition, { name: parameter.name }));
     }
 }
 

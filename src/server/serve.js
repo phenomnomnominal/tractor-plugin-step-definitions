@@ -4,9 +4,9 @@ import { getConfig } from './utilities';
 
 // Dependencies:
 import { FileStructure, serveFileStructure } from 'tractor-file-structure';
-import { StepDefinitionFile } from './step-definition-file';
+import { StepDefinitionFile } from './files/step-definition-file';
 
-export default function serve (application, config, di) {
+export default function serve (config, di) {
     config = getConfig(config);
 
     let { directory } = config;
@@ -18,4 +18,4 @@ export default function serve (application, config, di) {
 
     di.call(serveFileStructure)(stepDefinitionsFileStructure, 'step-definitions');
 }
-serve['@Inject'] = ['application', 'config', 'di'];
+serve['@Inject'] = ['config', 'di'];

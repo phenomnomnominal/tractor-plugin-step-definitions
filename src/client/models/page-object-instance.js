@@ -6,7 +6,8 @@ import { camel, pascal } from 'change-case';
 import { StepDefinitionsModule } from '../step-definitions.module';
 
 function createPageObjectInstanceModelConstructor (
-    astCreatorService
+    astCreatorService,
+    config
 ) {
     let PageObjectInstanceModel = function PageObjectInstanceModel (pageObject, stepDefinition) {
         Object.defineProperties(this, {
@@ -33,11 +34,6 @@ function createPageObjectInstanceModelConstructor (
             variableName: {
                 get () {
                     return camel(this.name);
-                }
-            },
-            actions: {
-                get () {
-                    return actions;
                 }
             },
             meta: {
@@ -73,7 +69,9 @@ function createPageObjectInstanceModelConstructor (
     }
 
     function getRelativePath () {
-        return path.relative(path.dirname(this.stepDefinition.url), this.pageObject.url);
+        let pageObjectPath = path.join(config.pageObjects.directory, this.pageObject.url);
+        let stepDefinitionPath = path.join(config.stepDefinitions.directory, this.stepDefinition.url);
+        return path.relative(path.dirname(stepDefinitionPath), pageObjectPath);
     }
 }
 
