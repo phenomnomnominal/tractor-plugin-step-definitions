@@ -79,7 +79,9 @@ function checkIfPending () {
 }
 
 function getFileReferences () {
-    this.fileStructure.references.clearReferences(this.path);
+    if (this.initialised) {
+        this.fileStructure.references.clearReferences(this.path);
+    }
 
     esquery(this.ast, REQUIRE_QUERY).forEach(requirePath => {
         let directoryPath = path.dirname(this.path);
@@ -89,4 +91,6 @@ function getFileReferences () {
             this.fileStructure.references.addReference(reference, this);
         }
     });
+    
+    this.initialised = true;
 }

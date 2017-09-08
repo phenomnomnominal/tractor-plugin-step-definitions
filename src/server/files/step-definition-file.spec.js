@@ -139,6 +139,43 @@ describe('tractor-plugin-step-definitions - StepDefinitionFile:', () => {
             });
         });
 
+        it(`shouldn't clear the references on first load`, () => {
+            let fileStructure = new FileStructure(path.join(path.sep, 'file-structure'));
+            let file = new StepDefinitionFile(path.join(path.sep, 'file-structure', 'directory', 'file'), fileStructure);
+
+            sinon.stub(JavaScriptFile.prototype, 'read').returns(Promise.resolve());
+            sinon.stub(fileStructure.references, 'clearReferences');
+
+            file.ast = esprima.parseScript(`var someReference = require('./other-file');`);
+
+            return file.read()
+            .then(() => {
+                expect(fileStructure.references.clearReferences).to.not.have.been.called();
+            })
+            .finally(() => {
+                JavaScriptFile.prototype.read.restore();
+            });
+        });
+
+        it('should clear the references on subsequent reads', () => {
+            let fileStructure = new FileStructure(path.join(path.sep, 'file-structure'));
+            let file = new StepDefinitionFile(path.join(path.sep, 'file-structure', 'directory', 'file'), fileStructure);
+
+            sinon.stub(JavaScriptFile.prototype, 'read').returns(Promise.resolve());
+            sinon.stub(fileStructure.references, 'clearReferences');
+
+            file.ast = esprima.parseScript(`var someReference = require('./other-file');`);
+            file.initialised = true;
+
+            return file.read()
+            .then(() => {
+                expect(fileStructure.references.clearReferences).to.have.been.called();
+            })
+            .finally(() => {
+                JavaScriptFile.prototype.read.restore();
+            });
+        });
+
         it('should set `isPending` to true if a step definition is pending', () => {
             let fileStructure = new FileStructure(path.join(path.sep, 'file-structure'));
             let filePath = path.join(path.sep, 'file-structure', 'directory', 'file');
