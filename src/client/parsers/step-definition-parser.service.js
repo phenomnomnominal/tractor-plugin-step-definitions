@@ -79,7 +79,7 @@ function StepDefinitionParserService (
         assert(name === 'require');
         let [path] = declarator.init.arguments;
         assert(path.value.match(/\.mock.json$/));
-        stepDefinition.addMock(meta.mockRequest[stepDefinition.mockRequest.length].name);
+        stepDefinition.addMock(meta.mockRequests[stepDefinition.mockRequests.length].name);
         return true;
     }
 
