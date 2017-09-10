@@ -2,12 +2,12 @@
 import { StepDefinitionsModule } from '../step-definitions.module';
 
 // Dependencies:
-import './argument';
+import './step-argument';
 
 function createExpectationModelConstructor (
     astCreatorService,
     stringToLiteralService,
-    ArgumentModel
+    StepArgumentModel
 ) {
     let ExpectationModel = function ExpectationModel (step) {
         let pageObject;
@@ -86,7 +86,7 @@ function createExpectationModelConstructor (
     }
 
     function parseArguments () {
-        return this.action.parameters.map(parameter => new ArgumentModel(this.step.stepDefinition, { name: parameter.name }));
+        return this.action.parameters.map(parameter => new StepArgumentModel(this.step.stepDefinition, { name: parameter.name }));
     }
 }
 

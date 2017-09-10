@@ -2,11 +2,11 @@
 import { StepDefinitionsModule } from '../step-definitions.module';
 
 // Dependencies:
-import './argument';
+import './step-argument';
 
 function createTaskModelConstructor (
     astCreatorService,
-    ArgumentModel
+    StepArgumentModel
 ) {
     let TaskModel = function TaskModel (step) {
         let pageObject;
@@ -70,7 +70,7 @@ function createTaskModelConstructor (
     }
 
     function parseArguments () {
-        return this.action.parameters.map(parameter => new ArgumentModel(this.step.stepDefinition, { name: parameter.name }));
+        return this.action.parameters.map(parameter => new StepArgumentModel(this.step.stepDefinition, { name: parameter.name }));
     }
 }
 

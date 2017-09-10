@@ -1,11 +1,11 @@
 // Module:
 import { StepDefinitionsModule } from '../step-definitions.module';
 
-function createArgumentModelConstructor (
+function createStepArgumentModelConstructor (
     astCreatorService,
     stringToLiteralService
 ) {
-    return function ArgumentModel (stepDefinition, argument) {
+    return function StepArgumentModel (stepDefinition, argument) {
         Object.defineProperties(this, {
             stepDefinition: {
                 get () {
@@ -51,4 +51,4 @@ function createArgumentModelConstructor (
     }
 }
 
-StepDefinitionsModule.factory('ArgumentModel', createArgumentModelConstructor);
+StepDefinitionsModule.factory('StepArgumentModel', createStepArgumentModelConstructor);
