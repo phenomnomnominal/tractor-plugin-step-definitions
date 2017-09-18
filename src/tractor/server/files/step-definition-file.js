@@ -3,11 +3,9 @@ const PENDING_IDENTIFIER = 'pending';
 const PENDING_QUERY = 'CallExpression[callee.name="callback"] .arguments[value]';
 const REQUIRE_QUERY = 'CallExpression[callee.name="require"] Literal';
 
-// Utilities:
+// Dependencies:
 import Promise from 'bluebird';
 import path from 'path';
-
-// Dependencies:
 import esquery from 'esquery';
 import { JavaScriptFile } from 'tractor-file-javascript';
 import { StepDefinitionFileRefactorer } from './step-definition-file-refactorer';
@@ -91,6 +89,6 @@ function getFileReferences () {
             this.fileStructure.references.addReference(reference, this);
         }
     });
-    
+
     this.initialised = true;
 }

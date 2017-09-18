@@ -1,10 +1,9 @@
 /* global describe:true, it:true */
 
 // Test setup:
-import { dedent, expect, sinon } from '../../../test-setup';
+import { dedent, expect, Promise, sinon } from '../../../../test-setup';
 
 // Utilities:
-import Promise from 'bluebird';
 import escodegen from 'escodegen';
 import * as esprima from 'esprima';
 import path from 'path';
@@ -16,7 +15,7 @@ import { StepDefinitionFile } from './step-definition-file';
 // Under test:
 import { StepDefinitionFileRefactorer } from './step-definition-file-refactorer';
 
-describe('tractor-plugin-page-objects: StepDefinitionFileRefactorer:', () => {
+describe('tractor-plugin-page-objects: step-definition-file-refactorer:', () => {
     describe('StepDefinitionFileRefactorer.mockRequestFileNameChange', () => {
         it('should update the name of a mock request file in a step definition', () => {
             let fileStructure = new FileStructure(path.join(path.sep, 'file-structure'));

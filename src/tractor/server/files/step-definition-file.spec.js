@@ -1,20 +1,11 @@
 /* global describe:true, it:true */
 
-// Utilities:
-import chai from 'chai';
-import dirtyChai from 'dirty-chai';
-import path from 'path';
-import Promise from 'bluebird';
-import sinon from 'sinon';
-import sinonChai from 'sinon-chai';
-
 // Test setup:
-const expect = chai.expect;
-chai.use(dirtyChai);
-chai.use(sinonChai);
+import { expect, Promise, sinon } from '../../../../test-setup';
 
 // Dependencies:
 import * as esprima from 'esprima';
+import path from 'path';
 import { JavaScriptFile } from 'tractor-file-javascript';
 import { FileStructure } from 'tractor-file-structure';
 import { StepDefinitionFileRefactorer } from './step-definition-file-refactorer';
@@ -22,7 +13,7 @@ import { StepDefinitionFileRefactorer } from './step-definition-file-refactorer'
 // Under test:
 import { StepDefinitionFile } from './step-definition-file';
 
-describe('tractor-plugin-step-definitions - StepDefinitionFile:', () => {
+describe('tractor-plugin-step-definitions - step-definition-file:', () => {
     describe('StepDefinitionFile constructor:', () => {
         it('should create a new StepDefinitionFile', () => {
             let fileStructure = new FileStructure(path.join(path.sep, 'file-structure'));

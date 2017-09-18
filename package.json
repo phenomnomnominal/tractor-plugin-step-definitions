@@ -1,6 +1,6 @@
 {
   "name": "tractor-plugin-step-definitions",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "author": "Craig Spence <craigspence0@gmail.com>",
   "repository": {
     "type": "git",
@@ -10,19 +10,20 @@
     "url": "https://github.com/phenomnomnominal/tractor-plugin-step-definitions/issues",
     "email": "craigspence0@gmail.com"
   },
-  "main": "dist/server/index.js",
+  "main": "dist/index.js",
   "watch": {
     "build": "src/**/*.js"
   },
   "scripts": {
     "prepublish": "npm run build",
-    "build": "npm run lint && npm run cover && npm run compile && npm run bundle",
+    "build": "npm run clean && npm run lint && npm run cover && npm run compile && npm run bundle",
     "bundle": "webpack --config webpack.config.js",
-    "compile": "babel src/server/ --out-dir dist/server/ --ignore *.spec.js",
+    "clean": "rimraf dist",
+    "compile": "babel src/ --out-dir dist/ --ignore *.spec.js,src/tractor/client",
     "cover": "istanbul cover --config .istanbulrc.json node_modules/mocha/bin/_mocha -- --opts ./.mocharc 'src/**/*.spec.js'",
     "lint": "eslint src/**/*.js; true",
-    "test": "mocha --opts ./.mocharc 'src/server/**/*.spec.js'",
-    "test:debug": "mocha --inspect --debug-brk --opts ./.mocharc 'src/server/**/*.spec.js'",
+    "test": "mocha --opts ./.mocharc 'src/**/*.spec.js'",
+    "test:debug": "mocha --inspect --debug-brk --opts ./.mocharc 'src/**/*.spec.js'",
     "watch": "npm-watch"
   },
   "license": "MIT",
@@ -32,7 +33,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-eslint": "^7.2.3",
+    "babel-eslint": "^8.0.0",
     "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
@@ -41,17 +42,20 @@
     "css-loader": "^0.28.7",
     "dedent": "^0.7.0",
     "dirty-chai": "^2.0.1",
+    "escodegen": "^1.9.0",
     "eslint": "^4.6.1",
     "esprima": "^4.0.0",
     "html-loader": "^0.5.1",
     "ineeda": "^0.11.0",
     "istanbul": "1.0.0-alpha.2",
     "mkdirp": "^0.5.1",
-    "mocha": "^3.5.0",
+    "mocha": "^3.5.3",
     "ng-annotate-loader": "^0.6.1",
     "npm-watch": "^0.2.0",
     "sinon": "^3.2.1",
     "sinon-chai": "^2.13.0",
+    "tractor-config-loader": "^0.4.0",
+    "tractor-file-structure": "^0.4.1-beta.0",
     "webpack": "^3.5.6"
   },
   "dependencies": {
@@ -59,9 +63,12 @@
     "change-case": "^3.0.1",
     "esquery": "^1.0.0",
     "graceful-fs": "^4.1.11",
-    "tractor-error-handler": "^0.2.1",
-    "tractor-file-javascript": "^0.2.0",
-    "tractor-file-structure": "^0.4.0-beta.0",
+    "tractor-error-handler": "^0.2.2",
+    "tractor-file-javascript": "^0.2.2",
     "tractor-logger": "^0.1.0"
+  },
+  "peerDependencies": {
+    "tractor-config-loader": "^0.4.0",
+    "tractor-file-structure": "^0.4.1-beta.0"
   }
 }

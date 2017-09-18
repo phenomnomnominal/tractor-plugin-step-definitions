@@ -4,8 +4,9 @@ import { ineeda } from 'ineeda';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-export const NOOP = () => {}
+export const NOOP = () => {};
 
+export Promise from 'bluebird';
 export dedent from 'dedent';
 export { expect } from 'chai';
 export { ineeda } from 'ineeda';
@@ -24,7 +25,7 @@ ineeda.intercept({
 // Intercept all values that are functions and turn it into a stub:
 ineeda.intercept((value, key, values, target) => {
     if (value instanceof Function) {
-        target[key] = () => { };
+        target[key] = NOOP;
         return sinon.stub(target, key).callsFake(values[key]);
     }
     return value;

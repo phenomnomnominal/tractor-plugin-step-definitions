@@ -1,7 +1,7 @@
 // Dependencies:
 import Promise from 'bluebird';
 
-export default function run (
+export function run (
     di,
     stepDefinitionsFileStructure
 ) {

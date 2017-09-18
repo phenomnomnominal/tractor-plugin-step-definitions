@@ -6,7 +6,7 @@ const PAGE_OBJECT_INSTANCE_DECLARATOR_QUERY = 'VariableDeclarator';
 const MOCK_REQUEST_INSTANCE_REQUIRE_QUERY = 'VariableDeclarator[init.callee.name="require"]';
 const MOCK_REQUEST_INSTANCE_BODY_PROPERTY_QUERY = 'ObjectExpression > Property[key.name=body]'
 
-// Utilities:
+// Dependencies:
 import camelcase from 'camel-case';
 import pascalcase from 'pascal-case';
 
