@@ -51,7 +51,7 @@
     "mkdirp": "^0.5.1",
     "mocha": "^3.5.3",
     "ng-annotate-loader": "^0.6.1",
-    "npm-watch": "^0.2.0",
+    "npm-watch": "^0.3.0",
     "sinon": "^3.2.1",
     "sinon-chai": "^2.13.0",
     "tractor-config-loader": "^0.4.0",
