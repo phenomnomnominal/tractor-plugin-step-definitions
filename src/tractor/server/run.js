@@ -28,7 +28,7 @@ function addMockRequests (
     mockRequestsFileStructure,
     stepDefinitionsFileStructure
 ) {
-    mockRequestsFileStructure.references.addFileStructure(stepDefinitionsFileStructure);
+    mockRequestsFileStructure.referenceManager.addFileStructure(stepDefinitionsFileStructure);
     return mockRequestsFileStructure.read();
 }
 addMockRequests['@Inject'] = ['mockRequestsFileStructure', 'stepDefinitionsFileStructure'];
@@ -38,7 +38,7 @@ function addPageObjects (
     pageObjectsFileStructure,
     stepDefinitionsFileStructure
 ) {
-    pageObjectsFileStructure.references.addFileStructure(stepDefinitionsFileStructure);
+    pageObjectsFileStructure.referenceManager.addFileStructure(stepDefinitionsFileStructure);
     return pageObjectsFileStructure.read();
 }
 addPageObjects['@Inject'] = ['pageObjectsFileStructure', 'stepDefinitionsFileStructure'];

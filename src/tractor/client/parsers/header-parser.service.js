@@ -20,10 +20,12 @@ function HeaderParserService (
                 parseKey(header, ast);
                 parseValue(header, ast);
                 return header;
+            // eslint-disable-next-line no-empty
             } catch (e) { }
 
             throw new Error();
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.warn('Invalid header:', ast);
             return null;
         }
@@ -40,6 +42,6 @@ function HeaderParserService (
         assert(value);
         header.value = value;
     }
-};
+}
 
 StepDefinitionsModule.service('headerParserService', HeaderParserService);

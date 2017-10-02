@@ -21,7 +21,7 @@ function createHeaderModelConstructor () {
     }
 
     function toAST () {
-        return '"' + this.key.replace(/"/, '\\\"') + '": ' + '"' + this.value.replace(/"/, '\\\"') + '"'
+        return '"' + this.key.replace(/"/, '\\"') + '": ' + '"' + this.value.replace(/"/, '\\"') + '"'
     }
 }
 

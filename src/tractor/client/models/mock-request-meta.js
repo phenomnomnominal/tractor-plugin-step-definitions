@@ -1,5 +1,4 @@
 // Utilities:
-import * as path from 'path';
 import { pascal } from 'change-case';
 
 // Module:

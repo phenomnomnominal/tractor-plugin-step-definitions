@@ -9,33 +9,26 @@ function createMockRequestInstanceModelConstructor (
     astCreatorService,
     config
 ) {
-    let MockRequestInstanceModel = function MockRequestInstanceModel (mockRequest, stepDefinition) {
+    let MockRequestInstanceModel = function MockRequestInstanceModel (meta, stepDefinition) {
         Object.defineProperties(this, {
             stepDefinition: {
                 get () {
                     return stepDefinition;
                 }
             },
-            mockRequest: {
+            meta: {
                 get () {
-                    return mockRequest;
+                    return meta;
                 }
             },
             name: {
                 get () {
-                    return this.mockRequest.name;
+                    return this.meta.name;
                 }
             },
             variableName: {
                 get () {
                     return camel(this.name);
-                }
-            },
-            meta: {
-                get () {
-                    return {
-                        name: this.name
-                    };
                 }
             },
             ast: {

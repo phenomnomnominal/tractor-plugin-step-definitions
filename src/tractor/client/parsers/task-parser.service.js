@@ -21,10 +21,12 @@ function TaskParserService (
 
             try {
                 return parseTask(step, taskCallExpression);
+            // eslint-disable-next-line no-empty
             } catch (e) { }
 
             throw new Error();
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.warn('Invalid task:', ast);
             return null;
         }
@@ -34,6 +36,7 @@ function TaskParserService (
         try {
             assert(ast.callee.object.callee);
             parse(step, ast.callee.object);
+        // eslint-disable-next-line no-empty
         } catch (e) { }
     }
 
@@ -42,6 +45,7 @@ function TaskParserService (
         parsers.filter(parser => {
             try {
                 taskCallExpression = parser(ast);
+            // eslint-disable-next-line no-empty
             } catch (e) { }
         });
         if (!taskCallExpression) {
@@ -66,7 +70,7 @@ function TaskParserService (
         task.pageObject = task.step.stepDefinition.pageObjectInstances.find(pageObjectInstance => {
             return taskCallExpression.callee.object.name === pageObjectInstance.variableName;
         });
-        task.action = task.pageObject.pageObject.actions.find(action => {
+        task.action = task.pageObject.meta.actions.find(action => {
             return taskCallExpression.callee.property.name === action.variableName;
         });
         taskCallExpression.arguments.forEach((argument, index) => {

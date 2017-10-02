@@ -26,7 +26,7 @@ describe('tractor-plugin-page-objects: step-definition-file-refactorer:', () => 
             file.ast = esprima.parseScript(`
                 /*{"name":"Given something","pageObjects":[],"mockRequests":[{"name":"foo"}]}*/
                 module.exports = function () {
-                    var foo = require('../mock-data/foo.mock.json');
+                    var foo = require('../mock-requests/foo.mock.json');
                     this.Given(/^something$/, function (done) {
                         Promise.all([
                             mockRequests.whenGET(/foo/, {
@@ -55,7 +55,7 @@ describe('tractor-plugin-page-objects: step-definition-file-refactorer:', () => 
                 expect(stepDefinition).to.equal(dedent(`
                     /*{"name":"Given something","pageObjects":[],"mockRequests":[{"name":"bar"}]}*/
                     module.exports = function () {
-                        var bar = require('../mock-data/foo.mock.json');
+                        var bar = require('../mock-requests/foo.mock.json');
                         this.Given(/^something$/, function (done) {
                             Promise.all([mockRequests.whenGET(/foo/, {
                                     body: bar,

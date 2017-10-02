@@ -25,7 +25,7 @@ function createTaskModelConstructor (
                 },
                 set (newPageObject) {
                     pageObject = newPageObject;
-                    [this.action] = this.pageObject.pageObject.actions;
+                    [this.action] = this.pageObject.meta.actions;
                 }
             },
             action: {
@@ -50,7 +50,7 @@ function createTaskModelConstructor (
         });
 
         [this.pageObject] = this.step.stepDefinition.pageObjectInstances;
-        [this.action] = this.pageObject.pageObject.actions;
+        [this.action] = this.pageObject.meta.actions;
     };
 
     return TaskModel;

@@ -26,7 +26,7 @@ function createExpectationModelConstructor (
                 },
                 set (newPageObject) {
                     pageObject = newPageObject;
-                    let [firstAction] = this.pageObject.pageObject.actions;
+                    let [firstAction] = this.pageObject.meta.actions;
                     this.action = firstAction;
                 }
             },

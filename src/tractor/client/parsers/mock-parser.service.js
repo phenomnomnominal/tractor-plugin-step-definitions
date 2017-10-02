@@ -18,14 +18,13 @@ function MockParserService (
         try {
             let mock = new MockRequestModel(step);
 
-            let mockCallExpression = ast.expression;
-
             mock.action = parseAction(mock, ast);
             mock.url = parseUrl(ast);
 
             try {
                 parsePassThrough(mock, ast);
                 return mock;
+            // eslint-disable-next-line no-empty
             } catch (e) { }
 
             try {
@@ -33,10 +32,12 @@ function MockParserService (
                 parseStatus(mock, ast);
                 parseHeaders(mock, ast);
                 return mock;
+            // eslint-disable-next-line no-empty
             } catch (e) { }
 
             throw new Error();
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.warn('Invalid mock:', ast);
             return null;
         }

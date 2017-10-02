@@ -3,3 +3,21 @@ tractor-step-definitions > div {
     height: 100%;
     width: 100%;
 }
+
+.file-tree--item--pending p::before {
+    content: "⚠️ pending";
+    color: rgba(255, 10, 10, 1);
+}
+
+.file-tree--item--unused p::before {
+    content: "⚠️ unused";
+    color: rgba(255, 10, 10, 1);
+}
+
+.file-tree__item--step-definition {
+    background-image: url('./step-definition.png');
+
+    &.dragover {
+        background-image: url('./move-step-definition-to-directory.png');
+    }
+}

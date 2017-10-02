@@ -5,10 +5,11 @@
     <tractor-file-tree
         extension="{{ $ctrl.extension }}"
         file-structure="$ctrl.fileStructure"
-        type="{{ $ctrl.type }}"
         create="$ctrl.createDirectory"
         delete="$ctrl.delete"
-        move="$ctrl.move">
+        move="$ctrl.move"
+        file-style="$ctrl.fileStyle"
+        readonly="true">
     </tractor-file-tree>
     <tractor-panel-handle
         panel-name="step-definition-file-tree">
@@ -70,7 +71,7 @@
                         <a
                             class="file-editor__list-item-reference"
                             title="{{ task.pageObject.name }}"
-                            ng-href="{{ $ctrl.getLink('tractor.page-objects', task.pageObject) }}">
+                            ui-sref="tractor.file({ file: { url: task.pageObject.meta.url } })">
                         </a>
                         <tractor-action
                             model="$ctrl.fileModel.step"
@@ -94,7 +95,7 @@
                         <tractor-select
                             label="Action"
                             model="task"
-                            options="task.pageObject.pageObject.actions"
+                            options="task.pageObject.meta.actions"
                             as="name">
                         </tractor-select>
                         <div ng-repeat="argument in task.arguments">
@@ -126,7 +127,7 @@
                         <a
                             class="file-editor__list-item-reference"
                             title="{{ expectation.pageObject.name }}"
-                            ng-href="{{ $ctrl.getLink('tractor.page-objects', expectation.pageObject) }}">
+                            ui-sref="tractor.file({ file: { url: expectation.pageObject.meta.url } })">
                         </a>
                         <tractor-action
                             model="$ctrl.fileModel.step"
@@ -144,7 +145,7 @@
                         <tractor-select
                             label="Action"
                             model="expectation"
-                            options="expectation.pageObject.pageObject.actions"
+                            options="expectation.pageObject.meta.actions"
                             as="name">
                         </tractor-select>
                         <tractor-select
@@ -190,7 +191,7 @@
                             </tractor-action>
                             <a
                                 title="{{ pageObject.name }}"
-                                ng-href="{{ $ctrl.getLink('tractor.page-objects', pageObject.pageObject) }}">
+                                ui-sref="tractor.file({ file: { url :pageObject.meta.url } })">
                                 {{ pageObject.name }}
                             </a>
                         </li>
@@ -200,17 +201,17 @@
                 <section class="file-editor__container">
                     <h2>Available page objects:</h2>
                     <ul>
-                        <li ng-repeat="pageObject in $ctrl.fileModel.availablePageObjects | orderBy: 'name'"
-                            ng-if="$ctrl.fileModel.pageObjects.indexOf(pageObject) === -1">
+                        <li ng-repeat="meta in $ctrl.fileModel.availablePageObjects | orderBy: 'name'"
+                            ng-if="$ctrl.fileModel.pageObjects.indexOf(meta) === -1">
                             <tractor-action
                                 model="$ctrl.fileModel"
                                 action="Add page object"
-                                argument="pageObject.name">
+                                argument="meta.name">
                             </tractor-action>
                             <a
-                                title="{{ pageObject.name }}"
-                                ng-href="{{ $ctrl.getLink('tractor.page-objects', pageObject) }}">
-                                {{ pageObject.name }}
+                                title="{{ meta.name }}"
+                                ui-sref="tractor.file({ file: { url: meta.url } })">
+                                {{ meta.name }}
                             </a>
                         </li>
                     </ul>
@@ -227,7 +228,7 @@
                         <a
                             class="file-editor__list-item-reference"
                             title="{{ mock.data.name }}"
-                            ng-href="{{ $ctrl.getLink('tractor.mock-data', mock.data) }}">
+                            ui-sref="tractor.file({ file: mock.data })">
                         </a>
                         <tractor-action
                             model="$ctrl.fileModel.step"
@@ -325,7 +326,7 @@
                             </tractor-action>
                             <a
                                 title="{{ mockRequest.name }}"
-                                ng-href="{{ $ctrl.getLink('tractor.mock-requests', mockRequest.mockRequest) }}">
+                                ui-sref="tractor.file({ file: { url: mockRequest.meta.url } })">
                                 {{ mockRequest.name }}
                             </a>
                         </li>
@@ -335,17 +336,17 @@
                 <section class="file-editor__container">
                     <h2>Available mock requests:</h2>
                     <ul>
-                        <li ng-repeat="mockRequest in $ctrl.fileModel.availableMockRequests | orderBy: 'name'"
-                            ng-if="$ctrl.fileModel.mockRequests.indexOf(mockRequest) === -1">
+                        <li ng-repeat="meta in $ctrl.fileModel.availableMockRequests | orderBy: 'name'"
+                            ng-if="$ctrl.fileModel.mockRequests.indexOf(meta) === -1">
                             <tractor-action
                                 model="$ctrl.fileModel"
                                 action="Add mock"
-                                argument="mockRequest.name">
+                                argument="meta.name">
                             </tractor-action>
                             <a
-                                title="{{ mockRequest.name }}"
-                                ng-href="{{ $ctrl.getLink('tractor.mock-data', mockRequest) }}">
-                                {{ mockRequest.name }}
+                                title="{{ meta.name }}"
+                                ui-sref="tractor.file({ file: { url: meta.url } })">
+                                {{ meta.name }}
                             </a>
                         </li>
                     </ul>

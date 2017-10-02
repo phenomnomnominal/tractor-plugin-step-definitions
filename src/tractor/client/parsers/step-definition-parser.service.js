@@ -42,6 +42,7 @@ function StepDefinitionParserService (
 
             return stepDefinition;
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.warn('Invalid step definition:', stepDefinitionFile.ast);
             return null;
         }
@@ -57,6 +58,7 @@ function StepDefinitionParserService (
             let parsed = parsers.some(parser => {
                 try {
                     return parser(stepDefinition, statement, meta);
+                // eslint-disable-next-line no-empty
                 } catch (e) { }
             });
             if (!parsed) {

@@ -29,7 +29,6 @@ function StepDefinitionsController (
         notifierService,
         null,
         stepDefinition,
-        'step-definitions',
         '.step.js'
     );
 
@@ -80,6 +79,15 @@ function StepDefinitionsController (
     });
 
     controller.style = $sce.trustAsHtml(style.toString());
+
+    controller.fileStyle = function (item) {
+        return {
+            'file-tree__item--step-definition': true,
+            'file-tree--item--pending': item.pending,
+            // 'file-tree--item--unused': item.referencedBy.length === 0
+        };
+    };
+
     return controller;
 }
 

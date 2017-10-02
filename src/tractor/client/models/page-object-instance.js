@@ -9,21 +9,21 @@ function createPageObjectInstanceModelConstructor (
     astCreatorService,
     config
 ) {
-    let PageObjectInstanceModel = function PageObjectInstanceModel (pageObject, stepDefinition) {
+    let PageObjectInstanceModel = function PageObjectInstanceModel (meta, stepDefinition) {
         Object.defineProperties(this, {
             stepDefinition: {
                 get () {
                     return stepDefinition;
                 }
             },
-            pageObject: {
+            meta: {
                 get () {
-                    return pageObject;
+                    return meta;
                 }
             },
             name: {
                 get () {
-                    return this.pageObject.name;
+                    return this.meta.name;
                 }
             },
             constructorName: {
@@ -34,13 +34,6 @@ function createPageObjectInstanceModelConstructor (
             variableName: {
                 get () {
                     return camel(this.name);
-                }
-            },
-            meta: {
-                get () {
-                    return {
-                        name: this.name
-                    };
                 }
             },
             ast: {

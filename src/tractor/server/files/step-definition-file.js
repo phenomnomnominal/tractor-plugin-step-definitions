@@ -12,15 +12,15 @@ import { StepDefinitionFileRefactorer } from './step-definition-file-refactorer'
 
 export class StepDefinitionFile extends JavaScriptFile {
     move (update, options) {
-        let references = this.fileStructure.references.getReferencesFrom(this.path);
-        this.fileStructure.references.clearReferences(this.path);
+        let { referencedBy } = this;
+        this.clearReferences();
 
         // Hack to fix coverage bug: https://github.com/gotwarlost/istanbul/issues/690
         /* istanbul ignore next */
         let move = super.move(update, options);
 
         return move.then(newFile => {
-            return Promise.map(references, reference => {
+            return Promise.map(referencedBy, reference => {
                 return newFile.refactor('referencePathChange', {
                     oldFromPath: this.path,
                     newFromPath: newFile.path,
@@ -35,8 +35,7 @@ export class StepDefinitionFile extends JavaScriptFile {
         /* istanbul ignore next */
         let read = super.read();
 
-        return read.then(() => getFileReferences.call(this))
-        .then(() => checkIfPending.call(this))
+        return read.then(() => getReferences.call(this))
         .then(() => this.content);
     }
 
@@ -57,36 +56,40 @@ export class StepDefinitionFile extends JavaScriptFile {
         /* istanbul ignore next */
         let save = super.save(data);
 
-        return save.then(() => getFileReferences.call(this))
-        .then(() => checkIfPending.call(this))
+        return save.then(() => getReferences.call(this))
         .then(() => this.content);
+    }
+
+    serialise () {
+        // Hack to fix coverage bug: https://github.com/gotwarlost/istanbul/issues/690
+        /* istanbul ignore next */
+        let serialised = super.serialise();
+
+        serialised.pending = checkPending.call(this);
+        return serialised;
     }
 }
 
 StepDefinitionFile.prototype.extension = '.step.js';
 
-function checkIfPending () {
-    this.isPending = false;
-
+function checkPending () {
     let pendingIdentifiers = esquery(this.ast, PENDING_QUERY);
-    pendingIdentifiers.forEach(pendingIdentifier => {
-        if (pendingIdentifier.value === PENDING_IDENTIFIER) {
-            this.isPending = true;
-        }
+    return pendingIdentifiers.some(pendingIdentifier => {
+        return pendingIdentifier.value === PENDING_IDENTIFIER;
     });
 }
 
-function getFileReferences () {
+function getReferences () {
     if (this.initialised) {
-        this.fileStructure.references.clearReferences(this.path);
+        this.clearReferences();
     }
 
     esquery(this.ast, REQUIRE_QUERY).forEach(requirePath => {
         let directoryPath = path.dirname(this.path);
         let referencePath = path.resolve(directoryPath, requirePath.value);
-        let reference = this.fileStructure.references.getReference(referencePath);
+        let reference = this.fileStructure.referenceManager.getReference(referencePath);
         if (reference) {
-            this.fileStructure.references.addReference(reference, this);
+            this.addReference(reference);
         }
     });
 

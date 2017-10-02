@@ -32,6 +32,7 @@ function StepParserService (
 
             return step;
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.warn('Invalid step:', ast);
             return null;
         }
@@ -55,6 +56,7 @@ function StepParserService (
             let parsed = parsers.some(parser => {
                 try {
                     return parser(step, statement);
+                // eslint-disable-next-line no-empty
                 } catch (e) { }
             });
             if (!parsed) {

@@ -110,6 +110,6 @@ function createStepModelConstructor (
             expectations
         });
     }
-};
+}
 
 StepDefinitionsModule.factory('StepModel', createStepModelConstructor);

@@ -7,7 +7,7 @@ import { expect, Promise, sinon } from '../../../../test-setup';
 import * as esprima from 'esprima';
 import path from 'path';
 import { JavaScriptFile } from 'tractor-file-javascript';
-import { FileStructure } from 'tractor-file-structure';
+import { File, FileStructure } from 'tractor-file-structure';
 import { StepDefinitionFileRefactorer } from './step-definition-file-refactorer';
 
 // Under test:
@@ -69,7 +69,7 @@ describe('tractor-plugin-step-definitions - step-definition-file:', () => {
             let referenceFilePath = path.join(path.sep, 'file-structure', 'directory', 'reference file.step.js');
             let referenceFile = new StepDefinitionFile(referenceFilePath, fileStructure);
 
-            sinon.stub(fileStructure.references, 'getReferencesFrom').returns([referenceFile]);
+            sinon.stub(fileStructure.referenceManager, 'getReferencedBy').returns([referenceFile]);
             sinon.stub(JavaScriptFile.prototype, 'move').returns(Promise.resolve(newFile));
             sinon.stub(StepDefinitionFile.prototype, 'refactor').returns(Promise.resolve());
 
@@ -122,8 +122,8 @@ describe('tractor-plugin-step-definitions - step-definition-file:', () => {
 
             return file.read()
             .then(() => {
-                expect(fileStructure.references.getReferencesTo(otherFile.path)).to.deep.equal([file]);
-                expect(fileStructure.references.getReferencesFrom(file.path)).to.deep.equal([otherFile]);
+                expect(file.references).to.deep.equal([otherFile]);
+                expect(otherFile.referencedBy).to.deep.equal([file]);
             })
             .finally(() => {
                 JavaScriptFile.prototype.read.restore();
@@ -135,16 +135,17 @@ describe('tractor-plugin-step-definitions - step-definition-file:', () => {
             let file = new StepDefinitionFile(path.join(path.sep, 'file-structure', 'directory', 'file'), fileStructure);
 
             sinon.stub(JavaScriptFile.prototype, 'read').returns(Promise.resolve());
-            sinon.stub(fileStructure.references, 'clearReferences');
+            sinon.stub(File.prototype, 'clearReferences');
 
             file.ast = esprima.parseScript(`var someReference = require('./other-file');`);
 
             return file.read()
             .then(() => {
-                expect(fileStructure.references.clearReferences).to.not.have.been.called();
+                expect(File.prototype.clearReferences).to.not.have.been.called();
             })
             .finally(() => {
                 JavaScriptFile.prototype.read.restore();
+                File.prototype.clearReferences.restore();
             });
         });
 
@@ -153,53 +154,18 @@ describe('tractor-plugin-step-definitions - step-definition-file:', () => {
             let file = new StepDefinitionFile(path.join(path.sep, 'file-structure', 'directory', 'file'), fileStructure);
 
             sinon.stub(JavaScriptFile.prototype, 'read').returns(Promise.resolve());
-            sinon.stub(fileStructure.references, 'clearReferences');
+            sinon.stub(File.prototype, 'clearReferences');
 
             file.ast = esprima.parseScript(`var someReference = require('./other-file');`);
             file.initialised = true;
 
             return file.read()
             .then(() => {
-                expect(fileStructure.references.clearReferences).to.have.been.called();
+                expect(File.prototype.clearReferences).to.have.been.called();
             })
             .finally(() => {
                 JavaScriptFile.prototype.read.restore();
-            });
-        });
-
-        it('should set `isPending` to true if a step definition is pending', () => {
-            let fileStructure = new FileStructure(path.join(path.sep, 'file-structure'));
-            let filePath = path.join(path.sep, 'file-structure', 'directory', 'file');
-
-            sinon.stub(JavaScriptFile.prototype, 'read').returns(Promise.resolve());
-
-            let file = new StepDefinitionFile(filePath, fileStructure);
-            file.ast = esprima.parseScript(`callback('pending');`);
-
-            return file.read()
-            .then(() => {
-                expect(file.isPending).to.equal(true);
-            })
-            .finally(() => {
-                JavaScriptFile.prototype.read.restore();
-            });
-        });
-
-        it('should set `isPending` to false if a step definition is completed', () => {
-            let fileStructure = new FileStructure(path.join(path.sep, 'file-structure'));
-            let filePath = path.join(path.sep, 'file-structure', 'directory', 'file');
-
-            sinon.stub(JavaScriptFile.prototype, 'read').returns(Promise.resolve());
-
-            let file = new StepDefinitionFile(filePath, fileStructure);
-            file.ast = esprima.parseScript(`callback('not-pending');`);
-
-            return file.read()
-            .then(() => {
-                expect(file.isPending).to.equal(false);
-            })
-            .finally(() => {
-                JavaScriptFile.prototype.read.restore();
+                File.prototype.clearReferences.restore();
             });
         });
     });
@@ -316,8 +282,8 @@ describe('tractor-plugin-step-definitions - step-definition-file:', () => {
 
             return file.save(ast)
             .then(() => {
-                expect(fileStructure.references.getReferencesTo(otherFile.path)).to.deep.equal([file]);
-                expect(fileStructure.references.getReferencesFrom(file.path)).to.deep.equal([otherFile]);
+                expect(file.references).to.deep.equal([otherFile]);
+                expect(otherFile.referencedBy).to.deep.equal([file]);
             })
             .finally(() => {
                 JavaScriptFile.prototype.__proto__.save.restore();
@@ -328,9 +294,10 @@ describe('tractor-plugin-step-definitions - step-definition-file:', () => {
             let fileStructure = new FileStructure(path.join(path.sep, 'file-structure'));
             let file = new StepDefinitionFile(path.join(path.sep, 'file-structure', 'directory', 'file'), fileStructure);
             let otherFile = new StepDefinitionFile(path.join(path.sep, 'file-structure', 'other-directory', 'file'), fileStructure);
-            fileStructure.references.addReference(otherFile, file);
+            file.addReference(otherFile);
             var content = '';
             let ast = esprima.parseScript(content);
+            file.initialised = true;
 
             // Hack:
             // Using JavaScriptFile.prototype.__proto__ to get access to the File prototype...
@@ -339,7 +306,8 @@ describe('tractor-plugin-step-definitions - step-definition-file:', () => {
 
             return file.save(ast)
             .then(() => {
-                expect(fileStructure.references.getReferencesTo(otherFile)).to.deep.equal([]);
+                expect(file.references).to.deep.equal([]);
+                expect(otherFile.referencedBy).to.deep.equal([]);
             })
             .finally(() => {
                 JavaScriptFile.prototype.__proto__.save.restore();

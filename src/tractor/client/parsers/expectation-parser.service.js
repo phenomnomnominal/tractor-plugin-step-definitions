@@ -24,6 +24,7 @@ function ExpectationParserService (
 
             return expectation;
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.warn('Invalid expectation:', ast);
             return null;
         }
@@ -36,7 +37,7 @@ function ExpectationParserService (
     }
 
     function parseAction (expectation, expectationCallExpression) {
-        return expectation.pageObject.pageObject.actions.find(action => {
+        return expectation.pageObject.meta.actions.find(action => {
             return expectationCallExpression.callee.property.name === action.variableName;
         });
     }

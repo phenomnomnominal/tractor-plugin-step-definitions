@@ -12,8 +12,11 @@ let tractor = angular.module('tractor');
 tractor.requires.push(StepDefinitionsModule.name);
 
 tractor.config((
+    redirectionServiceProvider,
     $stateProvider
 ) => {
+    redirectionServiceProvider.addFileType('.step.js', 'step-definitions');
+
     $stateProvider
     .state('tractor.step-definitions', {
         url: 'step-definitions{file:TractorFile}',
