@@ -53,7 +53,7 @@ function createMockRequestInstanceModelConstructor (
     }
 
     function getRelativePath () {
-        let mockRequestsPath = path.join(config.mockRequests.directory, this.mockRequest.url);
+        let mockRequestsPath = path.join(config.mockRequests.directory, this.meta.url);
         let stepDefinitionPath = path.join(config.stepDefinitions.directory, this.stepDefinition.url);
         return path.relative(path.dirname(stepDefinitionPath), mockRequestsPath);
     }
