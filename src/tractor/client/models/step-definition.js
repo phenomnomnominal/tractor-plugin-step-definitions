@@ -38,13 +38,9 @@ function createStepDefinitionModelConstructor (
                     return options.url;
                 }
             },
-            meta: {
+            comment: {
                 get () {
-                    return JSON.stringify({
-                        name: this.name,
-                        pageObjects: this.pageObjectInstances.map(pageObject => pageObject.meta),
-                        mockRequests: this.mockRequestInstances.map(mockRequest => mockRequest.meta)
-                    });
+                    return toComment.call(this);
                 }
             },
             ast: {
@@ -113,7 +109,15 @@ function createStepDefinitionModelConstructor (
             pageObjects,
             mockRequests,
             step: this.step.ast
-        }), this.meta);
+        }), this.comment);
+    }
+
+    function toComment () {
+        return JSON.stringify({
+            name: this.name,
+            pageObjects: this.pageObjectInstances.map(pageObject => pageObject.meta.comment),
+            mockRequests: this.mockRequestInstances.map(mockRequest => mockRequest.meta.comment)
+        });
     }
 }
 

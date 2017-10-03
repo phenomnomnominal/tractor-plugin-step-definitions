@@ -33,8 +33,19 @@ function createPageObjectMetaModelConstructor (
                 get () {
                     return pageObject.url;
                 }
+            },
+            comment: {
+                get () {
+                    return toComment.call(this);
+                }
             }
         });
+    }
+
+    function toComment () {
+        return {
+            name: this.name
+        };
     }
 }
 

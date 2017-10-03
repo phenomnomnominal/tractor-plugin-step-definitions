@@ -21,13 +21,24 @@ function createMockRequestMetaModelConstructor () {
                 get () {
                     return mockRequest.url;
                 }
+            },
+            comment: {
+                get () {
+                    return toComment.call(this);
+                }
             }
         });
-    };
+    }
 
     MockRequestMetaModel.prototype.actions = ['GET', 'POST', 'DELETE', 'PUT', 'HEAD', 'PATCH'];
 
     return MockRequestMetaModel;
+
+    function toComment () {
+        return {
+            name: this.name
+        };
+    }
 }
 
 StepDefinitionsModule.factory('MockRequestMetaModel', createMockRequestMetaModelConstructor);
