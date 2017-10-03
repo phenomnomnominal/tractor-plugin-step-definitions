@@ -28,11 +28,16 @@ function StepDefinitionParserService (
         availablePageObjects = availablePageObjects.map(pageObject => new PageObjectMetaModel(pageObject));
         availableMockRequests = availableMockRequests.map(mockRequest => new MockRequestMetaModel(mockRequest));
         try {
-            let { ast, url } = stepDefinitionFile;
+            let { ast } = stepDefinitionFile;
             let [firstComment] = ast.comments;
             let meta = JSON.parse(firstComment.value);
 
-            let stepDefinition = new StepDefinitionModel({ parameters, availablePageObjects, availableMockRequests, url });
+            let stepDefinition = new StepDefinitionModel({
+                parameters,
+                availablePageObjects,
+                availableMockRequests,
+                file: stepDefinitionFile
+            });
             stepDefinition.name = meta.name;
 
             let [module] = ast.body;

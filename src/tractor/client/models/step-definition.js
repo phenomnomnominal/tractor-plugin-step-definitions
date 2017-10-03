@@ -33,9 +33,9 @@ function createStepDefinitionModelConstructor (
                     return options.availableMockRequests;
                 }
             },
-            url: {
+            file: {
                 get () {
-                    return options.url;
+                    return options.file;
                 }
             },
             comment: {

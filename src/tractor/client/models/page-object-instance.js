@@ -63,7 +63,7 @@ function createPageObjectInstanceModelConstructor (
 
     function getRelativePath () {
         let pageObjectPath = path.join(config.pageObjects.directory, this.pageObject.url);
-        let stepDefinitionPath = path.join(config.stepDefinitions.directory, this.stepDefinition.url);
+        let stepDefinitionPath = path.join(config.stepDefinitions.directory, this.stepDefinition.file.url);
         return path.relative(path.dirname(stepDefinitionPath), pageObjectPath);
     }
 }
