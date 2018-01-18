@@ -16,7 +16,7 @@ import { StepDefinitionFile } from './step-definition-file';
 import { StepDefinitionFileRefactorer } from './step-definition-file-refactorer';
 
 describe('tractor-plugin-page-objects: step-definition-file-refactorer:', () => {
-    describe('StepDefinitionFileRefactorer.mockRequestFileNameChange', () => {
+    describe('StepDefinitionFileRefactorer.referenceNameChange', () => {
         it('should update the name of a mock request file in a step definition', () => {
             let fileStructure = new FileStructure(path.join(path.sep, 'file-structure'));
             let file = new StepDefinitionFile(path.join(path.sep, 'file-structure', 'directory', 'file.step.js'), fileStructure);
@@ -42,9 +42,10 @@ describe('tractor-plugin-page-objects: step-definition-file-refactorer:', () => 
                 comment: true
             });
 
-            return StepDefinitionFileRefactorer.mockRequestFileNameChange(file, {
+            return StepDefinitionFileRefactorer.referenceNameChange(file, {
                 oldName: 'foo',
-                newName: 'bar'
+                newName: 'bar',
+                extension: '.mock.json'
             })
             .then(() => {
                 file.ast.leadingComments = file.ast.comments;
@@ -71,9 +72,7 @@ describe('tractor-plugin-page-objects: step-definition-file-refactorer:', () => 
                 StepDefinitionFile.prototype.save.restore();
             });
         });
-    });
 
-    describe('StepDefinitionFileRefactorer.pageObjectFileNameChange', () => {
         it('should update the name of a page object file in a step definition', () => {
             let fileStructure = new FileStructure(path.join(path.sep, 'file-structure'));
             let file = new StepDefinitionFile(path.join(path.sep, 'file-structure', 'directory', 'file.step.js'), fileStructure);
@@ -95,9 +94,10 @@ describe('tractor-plugin-page-objects: step-definition-file-refactorer:', () => 
                 comment: true
             });
 
-            return StepDefinitionFileRefactorer.pageObjectFileNameChange(file, {
+            return StepDefinitionFileRefactorer.referenceNameChange(file, {
                 oldName: 'foo',
-                newName: 'bar'
+                newName: 'bar',
+                extension: '.po.js'
             })
             .then(() => {
                 file.ast.leadingComments = file.ast.comments;

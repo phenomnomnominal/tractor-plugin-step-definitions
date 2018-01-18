@@ -7,13 +7,25 @@ const MOCK_REQUEST_INSTANCE_REQUIRE_QUERY = 'VariableDeclarator[init.callee.name
 const MOCK_REQUEST_INSTANCE_BODY_PROPERTY_QUERY = 'ObjectExpression > Property[key.name=body]'
 
 // Dependencies:
+import Promise from 'bluebird';
 import camelcase from 'camel-case';
 import pascalcase from 'pascal-case';
 
 export const StepDefinitionFileRefactorer = {
-    mockRequestFileNameChange,
-    pageObjectFileNameChange
+    referenceNameChange
 };
+
+function referenceNameChange (file, data) {
+    let { extension } = data;
+
+    if (extension === '.mock.json') {
+        return mockRequestFileNameChange(file, data);
+    }
+    if (extension === '.po.js') {
+        return pageObjectFileNameChange(file, data);
+    }
+    return Promise.resolve();
+}
 
 function mockRequestFileNameChange (file, data) {
     let { oldName, newName } = data;

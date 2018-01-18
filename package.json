@@ -56,7 +56,7 @@
     "sinon-chai": "^2.14.0",
     "tractor-config-loader": "^0.4.4",
     "tractor-error-handler": "^0.2.4",
-    "tractor-file-structure": "^0.5.4",
+    "tractor-file-structure": "^0.5.6",
     "tractor-logger": "^0.1.1",
     "url-loader": "^0.6.2",
     "webpack": "^3.6.0"
@@ -66,7 +66,7 @@
     "change-case": "^3.0.1",
     "esquery": "^1.0.0",
     "graceful-fs": "^4.1.11",
-    "tractor-file-javascript": "^0.2.4"
+    "tractor-file-javascript": "^0.2.5"
   },
   "peerDependencies": {
     "tractor": "^0.12.1"

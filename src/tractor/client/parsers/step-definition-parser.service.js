@@ -5,8 +5,6 @@ import assert from 'assert';
 import { StepDefinitionsModule } from '../step-definitions.module';
 
 // Dependencies:
-import '../models/mock-request-meta';
-import '../models/page-object-meta';
 import '../models/step-definition';
 import '../models/step-definition-parameter';
 import './step-parser.service';
@@ -15,8 +13,6 @@ import './step-parser.service';
 const PARAMETER_NAME_REGEX = /([a-zA-Z]*)="([^"]*)"/g;
 
 function StepDefinitionParserService (
-    MockRequestMetaModel,
-    PageObjectMetaModel,
     StepDefinitionParameterModel,
     StepDefinitionModel,
     stepParserService
@@ -25,8 +21,6 @@ function StepDefinitionParserService (
 
     function parse (stepDefinitionFile, availablePageObjects, availableMockRequests) {
         let parameters = getParameters(stepDefinitionFile);
-        availablePageObjects = availablePageObjects.map(pageObject => new PageObjectMetaModel(pageObject));
-        availableMockRequests = availableMockRequests.map(mockRequest => new MockRequestMetaModel(mockRequest));
         try {
             let { ast } = stepDefinitionFile;
             let [firstComment] = ast.comments;

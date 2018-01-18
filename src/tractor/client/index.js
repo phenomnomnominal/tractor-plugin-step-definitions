@@ -27,20 +27,24 @@ tractor.config((
                     return [];
                 }
                 let pageObjectFileStructureService = $injector.get('pageObjectFileStructureService');
+                let PageObjectMetaModel = $injector.get('PageObjectMetaModel');
                 return pageObjectFileStructureService.getFileStructure()
                 .then(() => pageObjectFileStructureService.fileStructure.allFiles.filter(file => {
                     return file.extension === '.po.js';
-                }));
+                })
+                .map(file => new PageObjectMetaModel(file)));
             },
             availableMockRequests ($injector) {
                 if (!$injector.has('mockRequestFileStructureService')) {
                     return [];
                 }
                 let mockRequestFileStructureService = $injector.get('mockRequestFileStructureService');
+                let MockDataMetaModel = $injector.get('MockDataMetaModel');
                 return mockRequestFileStructureService.getFileStructure()
                 .then(() => mockRequestFileStructureService.fileStructure.allFiles.filter(file => {
                     return file.extension === '.mock.json';
-                }));
+                })
+                .map(file => new MockDataMetaModel(file)));
             },
             stepDefinition (
                 $stateParams,

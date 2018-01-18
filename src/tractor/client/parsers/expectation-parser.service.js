@@ -13,7 +13,7 @@ function ExpectationParserService (
         try {
             let expectation = new ExpectationModel(step);
             let [argument] = ast.arguments;
-            expectation.value = argument.raw;
+            expectation.expectedResult.value = argument.raw || argument.name;
 
             let [expectationCallExpression] = ast.callee.object.object.object.arguments;
 
@@ -44,7 +44,7 @@ function ExpectationParserService (
 
     function parseArguments (expectation, expectationCallExpression) {
         expectationCallExpression.arguments.forEach((argument, index) => {
-            expectation.arguments[index].value = argument.value;
+            expectation.arguments[index].value = argument.value || argument.name;
         });
     }
 }

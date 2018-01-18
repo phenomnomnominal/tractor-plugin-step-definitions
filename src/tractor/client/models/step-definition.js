@@ -38,9 +38,9 @@ function createStepDefinitionModelConstructor (
                     return options.file;
                 }
             },
-            comment: {
+            meta: {
                 get () {
-                    return toComment.call(this);
+                    return toMeta.call(this);
                 }
             },
             ast: {
@@ -109,14 +109,17 @@ function createStepDefinitionModelConstructor (
             pageObjects,
             mockRequests,
             step: this.step.ast
-        }), this.comment);
+        }), this.meta);
     }
 
-    function toComment () {
+    function toMeta () {
         return JSON.stringify({
             name: this.name,
-            pageObjects: this.pageObjectInstances.map(pageObject => pageObject.meta.comment),
-            mockRequests: this.mockRequestInstances.map(mockRequest => mockRequest.meta.comment)
+            // This will do for now, these aren't really needed in the meta data anymore.
+            // Need to remove from here, figure out the PO/MR from the required file, write an upgrade
+            // to remove extra meta-data from old files:
+            pageObjects: this.pageObjectInstances.map(pageObject => ({ name: pageObject.name })),
+            mockRequests: this.mockRequestInstances.map(mockRequest => ({ name: mockRequest.name }))
         });
     }
 }

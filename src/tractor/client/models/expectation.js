@@ -53,7 +53,7 @@ function createExpectationModelConstructor (
 
         [this.pageObject] = this.step.stepDefinition.pageObjectInstances;
         [this.condition] = this.conditions;
-        this.value = '';
+        this.expectedResult = new StepArgumentModel(this.step.stepDefinition, { name: 'Expected result' });
     };
 
     ExpectationModel.prototype.conditions = ['equal', 'contain'];
@@ -67,21 +67,12 @@ function createExpectationModelConstructor (
 
         let expectationArguments = this.arguments.map(argument => argument.ast);
 
-        let literalValue;
-        if (this.value && this.value.match(/["']/)) {
-             literalValue = this.value.replace(/["']/g, '');
-        } else {
-             literalValue = stringToLiteralService.toLiteral(this.value)
-        }
-
-        let expectedResult = ast.literal(literalValue);
-
         return ast.template(template, {
             pageObject: ast.identifier(this.pageObject.variableName),
             action: ast.identifier(this.action.variableName),
             expectationArguments: expectationArguments,
             condition: ast.identifier(this.condition),
-            expectedResult: expectedResult
+            expectedResult: this.expectedResult.ast
         }).expression;
     }
 
