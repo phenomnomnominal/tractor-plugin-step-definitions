@@ -90,7 +90,7 @@
                             label="Page Object"
                             model="task"
                             options="$ctrl.fileModel.pageObjectInstances"
-                            as="name">
+                            as="displayName">
                         </tractor-select>
                         <tractor-select
                             label="Action"
@@ -140,7 +140,7 @@
                             label="Page Object"
                             model="expectation"
                             options="$ctrl.fileModel.pageObjectInstances"
-                            as="name">
+                            as="displayName">
                         </tractor-select>
                         <tractor-select
                             label="Action"
@@ -190,9 +190,9 @@
                                 icon="remove">
                             </tractor-action>
                             <a
-                                title="{{ pageObject.name }}"
-                                ui-sref="tractor.file({ file: { url :pageObject.meta.url } })">
-                                {{ pageObject.name }}
+                                title="{{ pageObject.displayName }}"
+                                ui-sref="tractor.file({ file: { url: pageObject.meta.url } })">
+                                {{ pageObject.displayName }}
                             </a>
                         </li>
                     </ul>
@@ -201,7 +201,7 @@
                 <section class="file-editor__container">
                     <h2>Available page objects:</h2>
                     <ul>
-                        <li ng-repeat="meta in $ctrl.fileModel.availablePageObjects | orderBy: 'name'"
+                        <li ng-repeat="meta in $ctrl.fileModel.availablePageObjects | orderBy: 'displayName'"
                             ng-if="$ctrl.fileModel.pageObjects.indexOf(meta) === -1">
                             <tractor-action
                                 model="$ctrl.fileModel"
@@ -209,9 +209,9 @@
                                 argument="meta.name">
                             </tractor-action>
                             <a
-                                title="{{ meta.name }}"
+                                title="{{ meta.displayName }}"
                                 ui-sref="tractor.file({ file: { url: meta.url } })">
-                                {{ meta.name }}
+                                {{ meta.displayName }}
                             </a>
                         </li>
                     </ul>

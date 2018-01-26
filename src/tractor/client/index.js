@@ -23,16 +23,11 @@ tractor.config((
         component: 'tractorStepDefinitions',
         resolve: {
             availablePageObjects ($injector) {
-                if (!$injector.has('pageObjectFileStructureService')) {
+                if (!$injector.has('pageObjectsService')) {
                     return [];
                 }
-                let pageObjectFileStructureService = $injector.get('pageObjectFileStructureService');
-                let PageObjectMetaModel = $injector.get('PageObjectMetaModel');
-                return pageObjectFileStructureService.getFileStructure()
-                .then(() => pageObjectFileStructureService.fileStructure.allFiles.filter(file => {
-                    return file.extension === '.po.js';
-                })
-                .map(file => new PageObjectMetaModel(file)));
+                let pageObjectsService = $injector.get('pageObjectsService');
+                return pageObjectsService.getAvailablePageObjects();
             },
             availableMockRequests ($injector) {
                 if (!$injector.has('mockRequestFileStructureService')) {
