@@ -1,7 +1,8 @@
 /* global describe:true, it:true */
 
 // Test setup:
-import { dedent, expect, Promise, sinon } from '../../../../test-setup';
+import { expect, Promise, sinon } from '@tractor/unit-test';
+import dedent from 'dedent';
 
 // Utilities:
 import escodegen from 'escodegen';
@@ -9,7 +10,7 @@ import * as esprima from 'esprima';
 import path from 'path';
 
 // Dependencies:
-import { FileStructure } from 'tractor-file-structure';
+import { FileStructure } from '@tractor/file-structure';
 import { StepDefinitionFile } from './step-definition-file';
 
 // Under test:

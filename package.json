@@ -1,7 +1,12 @@
 {
-  "name": "tractor-plugin-step-definitions",
+  "name": "@tractor-plugins/step-definitions",
   "version": "0.3.0",
+  "description": "tractor plugin for manipulating Cucumber step definition files",
   "author": "Craig Spence <craigspence0@gmail.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/phenomnomnominal/tractor-plugin-step-definitions.git"
@@ -11,64 +16,55 @@
     "email": "craigspence0@gmail.com"
   },
   "main": "dist/index.js",
-  "watch": {
-    "build": "src/**/*.js"
-  },
   "scripts": {
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "build": "npm run clean && npm run lint && npm run cover && npm run compile && npm run bundle",
     "bundle": "webpack --config webpack.config.js",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist && rimraf reports",
     "compile": "babel src/ --out-dir dist/ --ignore *.spec.js,src/tractor/client",
     "cover": "istanbul cover --config .istanbulrc.json node_modules/mocha/bin/_mocha -- --opts ./.mocharc 'src/**/*.spec.js'",
     "lint": "eslint src",
     "test": "mocha --opts ./.mocharc 'src/**/*.spec.js'",
-    "test:debug": "mocha --inspect --debug-brk --opts ./.mocharc 'src/**/*.spec.js'",
     "watch": "npm-watch"
   },
-  "license": "MIT",
-  "engines": {
-    "node": ">=0.10"
+  "watch": {
+    "build": "src/**/*.js"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
+    "@babel/cli": "^7.0.0-beta.39",
+    "@babel/core": "^7.0.0-beta.39",
+    "@babel/plugin-proposal-export-default-from": "^7.0.0-beta.39",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.39",
+    "@babel/preset-env": "^7.0.0-beta.39",
+    "@babel/register": "^7.0.0-beta.39",
+    "@tractor/config-loader": "^1.0.0-alpha.5",
+    "@tractor/error-handler": "^1.0.0-alpha.5",
+    "@tractor/file-structure": "^1.0.0-alpha.5",
+    "@tractor/logger": "^1.0.0-alpha.5",
+    "@tractor/unit-test": "^1.0.0-alpha.5",
     "babel-eslint": "^8.2.1",
-    "babel-loader": "^7.1.2",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "babel-register": "^6.26.0",
-    "chai": "^4.1.2",
+    "babel-loader": "^8.0.0-beta.0",
     "css-loader": "^0.28.9",
     "dedent": "^0.7.0",
-    "dirty-chai": "^2.0.1",
     "escodegen": "^1.9.0",
     "eslint": "^4.16.0",
     "esprima": "^4.0.0",
     "html-loader": "^0.5.5",
-    "ineeda": "^0.11.1",
     "istanbul": "1.1.0-alpha.1",
-    "mkdirp": "^0.5.1",
     "mocha": "^5.0.0",
     "ng-annotate-loader": "^0.6.1",
     "npm-watch": "^0.3.0",
-    "sinon": "^4.2.1",
-    "sinon-chai": "^2.14.0",
-    "tractor-config-loader": "^0.5.0",
-    "tractor-error-handler": "^0.2.4",
-    "tractor-file-structure": "^0.5.7",
-    "tractor-logger": "^0.1.1",
     "url-loader": "^0.6.2",
     "webpack": "^3.10.0"
   },
   "dependencies": {
+    "@tractor/file-javascript": "^1.0.0-alpha.5",
     "bluebird": "^3.5.1",
     "change-case": "^3.0.1",
     "esquery": "^1.0.0",
-    "graceful-fs": "^4.1.11",
-    "tractor-file-javascript": "^0.2.5"
+    "graceful-fs": "^4.1.11"
   },
   "peerDependencies": {
-    "tractor": "^0.12.1"
+    "@tractor/core": "^1.0.0-alpha.5"
   }
 }

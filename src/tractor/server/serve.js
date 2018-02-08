@@ -1,6 +1,6 @@
 // Dependencies:
+import { FileStructure, serveFileStructure } from '@tractor/file-structure';
 import path from 'path';
-import { FileStructure, serveFileStructure } from 'tractor-file-structure';
 import { StepDefinitionFile } from './files/step-definition-file';
 
 export function serve (config, di) {

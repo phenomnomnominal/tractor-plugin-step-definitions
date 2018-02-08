@@ -3,9 +3,9 @@ const PENDING_IDENTIFIER = 'pending';
 const PENDING_QUERY = 'CallExpression[callee.name="callback"] .arguments[value]';
 
 // Dependencies:
+import { JavaScriptFile } from '@tractor/file-javascript';
 import Promise from 'bluebird';
 import esquery from 'esquery';
-import { JavaScriptFile } from 'tractor-file-javascript';
 import { StepDefinitionFileRefactorer } from './step-definition-file-refactorer';
 
 export class StepDefinitionFile extends JavaScriptFile {

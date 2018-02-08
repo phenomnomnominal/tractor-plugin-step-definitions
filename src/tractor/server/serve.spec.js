@@ -1,10 +1,10 @@
 /* global describe:true, it:true */
 
 // Test setup:
-import { expect, ineeda, NOOP, sinon } from '../../../test-setup';
+import { expect, ineeda, NOOP, sinon } from '@tractor/unit-test';
 
 // Dependencies:
-import { FileStructure } from 'tractor-file-structure';
+import { FileStructure } from '@tractor/file-structure';
 import { StepDefinitionFile } from './files/step-definition-file';
 
 // Under test:

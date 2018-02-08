@@ -1,12 +1,12 @@
 /* global describe:true, it:true */
 
 // Test setup:
-import { expect, Promise, sinon } from '../../../../test-setup';
+import { expect, Promise, sinon } from '@tractor/unit-test';
 
 // Dependencies:
+import { JavaScriptFile } from '@tractor/file-javascript';
+import { FileStructure } from '@tractor/file-structure';
 import path from 'path';
-import { JavaScriptFile } from 'tractor-file-javascript';
-import { FileStructure } from 'tractor-file-structure';
 import { StepDefinitionFileRefactorer } from './step-definition-file-refactorer';
 
 // Under test:

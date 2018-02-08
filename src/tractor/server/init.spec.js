@@ -1,14 +1,12 @@
 /* global describe:true, xit:true */
 
 // Test setup:
-import { expect, Promise, sinon } from '../../../test-setup';
+import { expect, Promise, sinon } from '@tractor/unit-test';
 
 // Dependencies:
-import * as tractorFileStructure from 'tractor-file-structure';
-import * as tractorLogger from 'tractor-logger';
-
-// Errors:
-import { TractorError } from 'tractor-error-handler';
+import { TractorError } from '@tractor/error-handler';
+import * as tractorFileStructure from '@tractor/file-structure';
+import * as tractorLogger from '@tractor/logger';
 
 // Under test:
 import { init } from './init';
