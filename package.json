@@ -1,6 +1,6 @@
 {
   "name": "@tractor-plugins/step-definitions",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "tractor plugin for manipulating Cucumber step definition files",
   "author": "Craig Spence <craigspence0@gmail.com>",
   "license": "MIT",

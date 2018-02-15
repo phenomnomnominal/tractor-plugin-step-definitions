@@ -33,12 +33,13 @@ function addMockRequests (
 }
 addMockRequests['@Inject'] = ['mockRequestsFileStructure', 'stepDefinitionsFileStructure'];
 
-
 function addPageObjects (
     pageObjectsFileStructure,
+    includeFileStructures,
     stepDefinitionsFileStructure
 ) {
     pageObjectsFileStructure.referenceManager.addFileStructure(stepDefinitionsFileStructure);
+    includeFileStructures.forEach(fileStructure => fileStructure.referenceManager.addFileStructure(stepDefinitionsFileStructure));
     return pageObjectsFileStructure.read();
 }
-addPageObjects['@Inject'] = ['pageObjectsFileStructure', 'stepDefinitionsFileStructure'];
+addPageObjects['@Inject'] = ['pageObjectsFileStructure', 'includeFileStructures', 'stepDefinitionsFileStructure'];
